@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThemeSong IG — Profile Theme Prototype</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="mark">♪</span><span>ThemeSong IG</span></div>
+      <span class="status">Standalone prototype</span>
+    </header>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">INSTAGRAM PROFILE EXPERIENCE</p>
+        <h1>Give your profile a sound.</h1>
+        <p class="lead">Let account owners choose an authorized theme track and preview how visitors experience their profile.</p>
+        <div class="actions"><button id="connectBtn" class="primary">Connect Instagram</button><button id="previewBtn" class="secondary">Preview profile</button></div>
+        <p id="connectState" class="hint">Demo mode — no Instagram credentials are requested.</p>
+      </div>
+      <div class="phone" aria-label="Profile preview">
+        <div class="phone-top">9:41 <span>● ● ●</span></div>
+        <div class="avatar">A</div><h2 id="profileName">@yourprofile</h2><p class="bio">Your world. Your sound.</p>
+        <div class="theme-card"><div class="disc">♪</div><div class="track-info"><strong id="trackTitle">Golden Hour</strong><span>Profile theme</span></div><button id="playBtn" class="play" aria-label="Play theme">▶</button></div>
+        <div class="profile-lines"><i></i><i></i><i></i></div>
+      </div>
+    </section>
+    <section class="panel" id="settings">
+      <div class="panel-head"><div><p class="eyebrow">OWNER CONTROLS</p><h2>Theme song settings</h2></div><span class="pill">MVP</span></div>
+      <label>Instagram handle<input id="handle" value="yourprofile" maxlength="30"></label>
+      <label>Theme track<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option></select></label>
+      <label>Playback behavior<select id="behavior"><option>Play on profile visit (where permitted)</option><option>Play intro once</option><option>Loop theme</option><option>Visitor starts manually</option></select></label>
+      <div class="notice"><strong>Integration boundary</strong><span>This prototype demonstrates the experience outside Instagram. Direct Instagram profile audio requires Meta-supported APIs, permissions and App Review.</span></div>
+      <button id="saveBtn" class="primary wide">Save prototype settings</button><p id="saved" class="saved" role="status"></p>
+    </section>
+    <footer>Prototype v0.1 · Built for GitHub → Vercel development</footer>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
