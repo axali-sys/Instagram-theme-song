@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Music Pro — your profile, your sound, your relationship with music.">
+  <meta name="description" content="Music Pro — your profile, your sound, your relationship with music and the projects you follow.">
   <title>Music Pro — Your profile. Your sound.</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -11,15 +11,15 @@
   <main class="shell">
     <header class="topbar">
       <a class="brand" href="./"><span class="mark">♪</span><span>Music Pro</span></a>
-      <nav><a href="#discover">Discover</a><a href="#profile">My Profile</a><button id="createBtn" class="nav-button">Create</button></nav>
+      <nav><a href="#projects">Projects</a><a href="#discover">Discover</a><a href="#profile">My Profile</a><button id="createBtn" class="nav-button">Create</button></nav>
     </header>
 
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">LISTENER-FIRST MUSIC IDENTITY</p>
         <h1>Your profile. Your sound.</h1>
-        <p class="lead">Music Pro makes the listener the center of music. Build your identity around the songs you love, the moments you create, the people you connect with and the music that moves you.</p>
-        <div class="actions"><button id="createHero" class="primary">Create my Music Pro Profile</button><a href="#profile" class="secondary">Preview my profile</a></div>
+        <p class="lead">Music Pro makes the listener the center of music — while giving musicians a friendly way to release projects, show progress, understand expectations and receive meaningful evaluation.</p>
+        <div class="actions"><button id="createHero" class="primary">Create my Music Pro Profile</button><a href="#projects" class="secondary">Track music projects</a></div>
       </div>
 
       <div class="profile-card" id="profile">
@@ -27,17 +27,9 @@
         <div class="profile-body">
           <div class="avatar">A</div>
           <div class="profile-meta"><div><h2 id="profileName">@yourprofile</h2><p>This is what I sound like.</p></div><button id="followBtn" class="follow">Follow</button></div>
-
           <div class="theme-card"><div class="disc">♪</div><div class="track-info"><strong id="trackTitle">Golden Hour</strong><span>My Theme Song · a song that represents me</span></div><button id="playBtn" class="play" aria-label="Play my Theme Song">▶</button></div>
-
-          <div class="listener-actions">
-            <button class="engage active" data-action="Like">♡ <span>Like</span></button>
-            <button class="engage" data-action="Save">＋ <span>Save</span></button>
-            <button class="engage" data-action="Share">↗ <span>Share</span></button>
-          </div>
-
+          <div class="listener-actions"><button class="engage active" data-action="Like">♡ <span>Like</span></button><button class="engage" data-action="Save">＋ <span>Save</span></button><button class="engage" data-action="Share">↗ <span>Share</span></button></div>
           <div class="identity-block"><div class="block-title">MY SOUND</div><div class="chips"><span>Afrobeats</span><span>R&B</span><span>Hip-Hop</span><span>Chill</span></div></div>
-
           <div class="stats"><span><b>24</b> Favorites</span><span><b>8</b> Artists</span><span><b>3</b> Playlists</span></div>
         </div>
       </div>
@@ -50,27 +42,41 @@
       <article class="feature-card"><p class="eyebrow">MY MOMENTS</p><h2>Music Moments</h2><p>Attach a song to a memory, post or moment in my life.</p><button class="moment-button" id="momentBtn">＋ Add a Music Moment</button></article>
     </section>
 
-    <section class="section" id="discover">
-      <div class="section-head"><div><p class="eyebrow">MY MUSIC CIRCLE</p><h2>People like me</h2></div><span class="muted">Discover listeners</span></div>
-      <div class="profile-grid">
-        <article class="mini-profile"><div class="mini-top"><div class="mini-avatar">S</div><button class="mini-follow">Follow</button></div><h3>@soundwave</h3><p>Similar taste · Afrobeats · R&B</p><button class="mini-play">▶ Listen to their Theme Song</button></article>
-        <article class="mini-profile"><div class="mini-top"><div class="mini-avatar">M</div><button class="mini-follow">Follow</button></div><h3>@midnight</h3><p>Similar taste · Hip-Hop · Electronic</p><button class="mini-play">▶ Listen to their Theme Song</button></article>
-        <article class="mini-profile"><div class="mini-top"><div class="mini-avatar">D</div><button class="mini-follow">Follow</button></div><h3>@daydreamer</h3><p>Similar taste · Pop · Indie</p><button class="mini-play">▶ Listen to their Theme Song</button></article>
+    <section class="section" id="projects">
+      <div class="section-head"><div><p class="eyebrow">MY PROJECT TRACKER</p><h2>Projects I’m following</h2><p class="section-copy">Follow a musician's journey without leaving the listener's point of view.</p></div><span class="pill">3 tracked</span></div>
+      <div class="project-grid">
+        <article class="project-card" data-project="album">
+          <div class="project-art album-art">ALBUM</div><div class="project-body"><div class="project-top"><span class="type">Album</span><span class="status creating">Creating</span></div><h3>New Album</h3><p>Artist 01 · expected October</p><div class="progress-label"><span>Release progress</span><b>68%</b></div><div class="progress"><i style="width:68%"></i></div><div class="milestones"><span class="done">✓ Announced</span><span class="done">✓ Cover</span><span class="done">✓ Preview</span><span class="current">● Final production</span><span>○ Release</span></div><div class="project-actions"><button class="track-btn active">Following</button><button class="expect-btn active">★ Expecting</button><button class="open-project" data-target="album">View project</button></div></div>
+        </article>
+        <article class="project-card" data-project="episode">
+          <div class="project-art episode-art">EP</div><div class="project-body"><div class="project-top"><span class="type">Episode</span><span class="status preview">Preview</span></div><h3>Episode 12</h3><p>Artist 02 · preview available</p><div class="progress-label"><span>Release progress</span><b>84%</b></div><div class="progress"><i style="width:84%"></i></div><div class="milestones"><span class="done">✓ Recorded</span><span class="done">✓ Edited</span><span class="current">● Preview</span><span>○ Release</span></div><div class="project-actions"><button class="track-btn active">Following</button><button class="expect-btn">☆ Expect</button><button class="open-project" data-target="episode">View project</button></div></div>
+        </article>
+        <article class="project-card" data-project="song">
+          <div class="project-art song-art-large">♫</div><div class="project-body"><div class="project-top"><span class="type">Song</span><span class="status ready">Ready</span></div><h3>New Sound</h3><p>Artist 03 · release soon</p><div class="progress-label"><span>Release progress</span><b>96%</b></div><div class="progress"><i style="width:96%"></i></div><div class="milestones"><span class="done">✓ Announced</span><span class="done">✓ Preview</span><span class="done">✓ Final</span><span class="current">● Release</span></div><div class="project-actions"><button class="track-btn">Follow</button><button class="expect-btn active">★ Expecting</button><button class="open-project" data-target="song">View project</button></div></div>
+        </article>
+      </div>
+
+      <div class="project-detail" id="projectDetail" hidden>
+        <div class="detail-head"><div><p class="eyebrow">PROJECT OVERVIEW</p><h2 id="detailTitle">New Album</h2><p id="detailSubtitle">Album · Artist 01 · Expected October</p></div><button id="closeProject" class="close">Close</button></div>
+        <div class="detail-grid">
+          <div><div class="detail-progress"><span id="detailProgress">68%</span><small>creator-reported progress</small></div><div class="progress large"><i id="detailBar" style="width:68%"></i></div><div class="timeline" id="detailTimeline"></div></div>
+          <div class="signal-card"><p class="eyebrow">AUDIENCE SIGNALS</p><div><span>Following</span><b id="signalFollowing">1,842</b></div><div><span>Expecting</span><b id="signalExpecting">742</b></div><div><span>Saved</span><b>318</b></div><div><span>Anticipation</span><b>91%</b></div><div><span>Expectation</span><b>88%</b></div></div>
+        </div>
+        <div class="expectations"><div><p class="eyebrow">WHAT I AM LOOKING FORWARD TO</p><h3>Set my expectations</h3></div><div class="expectation-grid"><label><input type="checkbox" checked> Release date</label><label><input type="checkbox" checked> New sound / direction</label><label><input type="checkbox"> Collaboration</label><label><input type="checkbox"> Story continuation</label></div></div>
+        <div class="evaluation"><div><p class="eyebrow">AFTER RELEASE</p><h3>Evaluate the project</h3><p>Audience evaluation is separate from professional or critic evaluation.</p></div><div class="rating-grid"><label>Overall<select><option>Not evaluated</option><option>Excellent</option><option>Very good</option><option>Good</option><option>Needs work</option></select></label><label>Connection<select><option>Not evaluated</option><option>Strong connection</option><option>Some connection</option><option>Low connection</option></select></label><label>Replay / Return<select><option>Not evaluated</option><option>Definitely</option><option>Maybe</option><option>Unlikely</option></select></label><label>Met expectation<select><option>Not evaluated</option><option>Exceeded</option><option>Met</option><option>Below</option></select></label></div><button id="submitEvaluation" class="primary">Save my evaluation</button></div>
       </div>
     </section>
 
-    <section class="artist-strip"><div><p class="eyebrow">PART OF MY WORLD</p><h2>Artists I Love</h2><p>Artists are important — but they appear through my relationship with their music.</p></div><div class="artist-chips"><span>Artist 01</span><span>Artist 02</span><span>Artist 03</span><span>+ Discover</span></div></section>
-
-    <section class="panel" id="settings">
-      <div class="panel-head"><div><p class="eyebrow">PROFILE BUILDER</p><h2>Build my Music Pro identity</h2></div><span class="pill">V1</span></div>
-      <label>Username<input id="handle" value="yourprofile" maxlength="30"></label>
-      <label>My Theme Song<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option><option>Calm Down</option></select></label>
-      <label>My primary sound<select id="genre"><option>Afrobeats</option><option>R&B</option><option>Hip-Hop</option><option>Pop</option><option>Electronic</option></select></label>
-      <div class="notice"><strong>Listener-first principle</strong><span>Music Pro stores the user's music identity and selected track metadata. Artists and catalogs support the listener experience rather than becoming the center of the profile.</span></div>
-      <button id="saveBtn" class="primary wide">Save My Music Pro Profile</button><p id="saved" class="saved" role="status"></p>
+    <section class="section compact" id="discover">
+      <div class="section-head"><div><p class="eyebrow">MY MUSIC CIRCLE</p><h2>People like me</h2></div><span class="muted">Discover listeners</span></div>
+      <div class="profile-grid"><article class="mini-profile"><div class="mini-top"><div class="mini-avatar">S</div><button class="mini-follow">Follow</button></div><h3>@soundwave</h3><p>Similar taste · Afrobeats · R&B</p><button class="mini-play">▶ Listen to their Theme Song</button></article><article class="mini-profile"><div class="mini-top"><div class="mini-avatar">M</div><button class="mini-follow">Follow</button></div><h3>@midnight</h3><p>Similar taste · Hip-Hop · Electronic</p><button class="mini-play">▶ Listen to their Theme Song</button></article><article class="mini-profile"><div class="mini-top"><div class="mini-avatar">D</div><button class="mini-follow">Follow</button></div><h3>@daydreamer</h3><p>Similar taste · Pop · Indie</p><button class="mini-play">▶ Listen to their Theme Song</button></article></div>
     </section>
 
-    <footer>Music Pro V1 · Listener identity layer · Your music relationship comes first</footer>
+    <section class="artist-strip"><div><p class="eyebrow">PART OF MY WORLD</p><h2>Artists I Love</h2><p>Artists are important — but they appear through my relationship with their music and projects.</p></div><div class="artist-chips"><span>Artist 01</span><span>Artist 02</span><span>Artist 03</span><span>+ Discover</span></div></section>
+
+    <section class="panel" id="settings"><div class="panel-head"><div><p class="eyebrow">PROFILE BUILDER</p><h2>Build my Music Pro identity</h2></div><span class="pill">V1</span></div><label>Username<input id="handle" value="yourprofile" maxlength="30"></label><label>My Theme Song<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option><option>Calm Down</option></select></label><label>My primary sound<select id="genre"><option>Afrobeats</option><option>R&B</option><option>Hip-Hop</option><option>Pop</option><option>Electronic</option></select></label><div class="notice"><strong>Listener-first principle</strong><span>Music Pro connects listener identity to musician projects without making the artist the center of the user's profile. Project progress is creator-reported; audience evaluation is its own signal.</span></div><button id="saveBtn" class="primary wide">Save My Music Pro Profile</button><p id="saved" class="saved" role="status"></p></section>
+
+    <footer>Music Pro V1 · Listener identity + project release layer · Your music relationship comes first</footer>
   </main>
   <script src="./app.js"></script>
 </body>
