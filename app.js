@@ -10,7 +10,6 @@ function sync(){
   profileName.textContent='@'+username;
   trackTitle.textContent=track.value;
 }
-
 handle.addEventListener('input',sync);
 track.addEventListener('change',sync);
 
@@ -18,42 +17,51 @@ document.querySelector('#playBtn').addEventListener('click',e=>{
   e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';
   saved.textContent=e.currentTarget.textContent==='Ⅱ'?'Theme Song preview playing.':'Theme Song preview paused.';
 });
-
-document.querySelector('#followBtn').addEventListener('click',e=>{
-  e.currentTarget.textContent=e.currentTarget.textContent==='Follow'?'Following':'Follow';
-});
+document.querySelector('#followBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='Follow'?'Following':'Follow'});
 
 document.querySelectorAll('.engage').forEach(button=>{
   button.addEventListener('click',()=>{
     const action=button.dataset.action;
-    if(action==='Like'){
+    if(action==='Like'||action==='Save'){
       button.classList.toggle('active');
-      button.querySelector('span').textContent=button.classList.contains('active')?'Liked':'Like';
-    }else if(action==='Save'){
-      button.classList.toggle('active');
-      button.querySelector('span').textContent=button.classList.contains('active')?'Saved':'Save';
-    }else{
-      navigator.clipboard?.writeText(window.location.href);
-      saved.textContent='Music Profile link copied.';
-    }
+      button.querySelector('span').textContent=button.classList.contains('active')?(action==='Like'?'Liked':'Saved'):action;
+    }else{navigator.clipboard?.writeText(window.location.href);saved.textContent='Music Profile link copied.';}
   });
 });
 
-document.querySelectorAll('.mini-follow').forEach(button=>{
-  button.addEventListener('click',()=>{
-    button.textContent=button.textContent==='Follow'?'Following':'Follow';
-  });
-});
+document.querySelectorAll('.mini-follow').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent==='Follow'?'Following':'Follow'}));
+document.querySelector('#momentBtn').addEventListener('click',()=>{saved.textContent='Music Moment creator is ready for the next V1 step.'});
+document.querySelectorAll('.mini-play').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent.includes('Listen')?'Ⅱ Playing their Theme Song':'▶ Listen to their Theme Song'}));
 
-document.querySelector('#momentBtn').addEventListener('click',()=>{
-  saved.textContent='Music Moment creator is ready for the next V1 step.';
-});
+const projects={
+  album:{title:'New Album',subtitle:'Album · Artist 01 · Expected October',progress:68,following:'1,842',expecting:'742',timeline:['✓ Announced','✓ Cover revealed','✓ Preview released','● Final production','○ Release','○ Post-release evaluation']},
+  episode:{title:'Episode 12',subtitle:'Episode · Artist 02 · Preview available',progress:84,following:'906',expecting:'401',timeline:['✓ Recorded','✓ Edited','● Preview','○ Release','○ Post-release evaluation']},
+  song:{title:'New Sound',subtitle:'Song · Artist 03 · Release soon',progress:96,following:'2,104',expecting:'1,120',timeline:['✓ Announced','✓ Preview','✓ Final production','● Release','○ Post-release evaluation']}
+};
+const projectDetail=document.querySelector('#projectDetail');
+function openProject(key){
+  const p=projects[key];
+  document.querySelector('#detailTitle').textContent=p.title;
+  document.querySelector('#detailSubtitle').textContent=p.subtitle;
+  document.querySelector('#detailProgress').textContent=p.progress+'%';
+  document.querySelector('#detailBar').style.width=p.progress+'%';
+  document.querySelector('#signalFollowing').textContent=p.following;
+  document.querySelector('#signalExpecting').textContent=p.expecting;
+  document.querySelector('#detailTimeline').innerHTML=p.timeline.map((x,i)=>`<span class="${x.startsWith('✓')?'done':x.startsWith('●')?'current':''}">${x}</span>`).join('');
+  projectDetail.hidden=false;
+  projectDetail.scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('.open-project').forEach(button=>button.addEventListener('click',()=>openProject(button.dataset.target)));
+document.querySelector('#closeProject').addEventListener('click',()=>{projectDetail.hidden=true});
 
-document.querySelectorAll('.mini-play').forEach(button=>{
-  button.addEventListener('click',()=>{
-    button.textContent=button.textContent.includes('Listen')?'Ⅱ Playing their Theme Song':'▶ Listen to their Theme Song';
-  });
-});
+document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEventListener('click',()=>{
+  const tracking=button.classList.contains('track-btn');
+  button.classList.toggle('active');
+  if(tracking){button.textContent=button.classList.contains('active')?'Following':'Follow';}
+  else{button.textContent=button.classList.contains('active')?'★ Expecting':'☆ Expect';}
+}));
+
+document.querySelector('#submitEvaluation').addEventListener('click',()=>{saved.textContent='Your audience evaluation has been saved to this project. Professional/critic evaluation remains separate.'});
 
 function startBuilder(){document.querySelector('#settings').scrollIntoView({behavior:'smooth'});setTimeout(()=>handle.focus(),450)}
 document.querySelector('#createBtn').addEventListener('click',startBuilder);
@@ -67,12 +75,4 @@ document.querySelector('#saveBtn').addEventListener('click',()=>{
 });
 
 const stored=localStorage.getItem('musicProfileV1');
-if(stored){
-  try{
-    const s=JSON.parse(stored);
-    handle.value=s.username||handle.value;
-    track.value=s.themeSong||track.value;
-    genre.value=s.genre||genre.value;
-    sync();
-  }catch{}
-}
+if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.genre||genre.value;sync()}catch{}}
