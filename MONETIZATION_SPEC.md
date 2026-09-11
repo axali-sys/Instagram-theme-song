@@ -1,35 +1,33 @@
-# Music Pro — Monetization-Ready Product Specification
+# Music Pro — Free-First Monetization Specification
 
 **Product:** Music Pro  
 **Tagline:** Your profile. Your sound.  
-**Monetization ladder:** Free → Premium → Artist Promotion → Streaming Partnerships → Music Marketplace
+**Core model:** Free for listeners and basic creators → Artist Promotion → Streaming Partnerships → Music Marketplace
 
 ## 1. Monetization principle
 
-Music Pro should monetize the music relationship without breaking its listener-first identity.
+Music Pro should be **free to use at its core**. The listener should never need a subscription to build a music identity, follow projects, discover people, express expectations, evaluate releases, or participate in the Music Pro community.
 
-The listener remains the protagonist. Musicians pay for better project visibility and release tools. Streaming partners pay for qualified discovery/referral activity. Marketplace participants pay transaction fees or service fees when Music Pro creates measurable value.
-
-The five layers should reinforce one another:
+Artists should also be able to create a basic profile and project without paying. Revenue should come from optional commercial activity that creates measurable value around the free network.
 
 ```text
-FREE
-  ↓ user identity + network effects
-PREMIUM
-  ↓ deeper identity + utility
+FREE CORE
+  ↓ audience + identity + network effects
 ARTIST PROMOTION
-  ↓ paid project discovery
+  ↓ optional paid discovery
 STREAMING PARTNERSHIPS
-  ↓ qualified listening/referral economics
+  ↓ authorized listening/referral economics
 MUSIC MARKETPLACE
   ↓ transactions + creator economy
+SPONSORSHIPS / COMMERCIAL SERVICES
+  ↓ optional brand and professional opportunities
 ```
 
-## 2. Free — audience acquisition layer
+## 2. Free Core — the product promise
 
-Free is the default Music Pro experience and should remain genuinely useful.
+Music Pro's primary listener and basic creator experience remains free.
 
-### Included
+### Included for listeners
 - Music Pro profile
 - Theme Song
 - Favorites
@@ -44,34 +42,22 @@ Free is the default Music Pro experience and should remain genuinely useful.
 - Basic project evaluation
 - Discover / Music Circle
 
+### Included for artists/creators
+- Artist profile
+- Basic project creation
+- Song / Episode / Album project types
+- Release timeline
+- Project milestones
+- Audience following
+- Audience expectations
+- Basic audience signals
+- Basic project evaluation
+- Release updates
+
 ### Business purpose
-Free maximizes network growth, profile creation, project following, listening intent and audience signals. It is the foundation for every later revenue stream.
+The free core maximizes participation, network growth, project creation, discovery, listening intent and audience signals. Growth is not blocked by a paywall.
 
-## 3. Premium — listener subscription
-
-### Proposed launch price
-**$1.99/month** as the initial benchmark, with annual pricing and regional pricing introduced later.
-
-### Premium features
-- Advanced Music Pro profile customization
-- Multiple Theme Songs / profile sound modes
-- Advanced listening history
-- Deeper music statistics
-- Unlimited or expanded playlists
-- Advanced Music Moments
-- Private/extended identity controls
-- Advanced project tracking and release timelines
-- Priority notifications
-- Enhanced evaluation history
-- Premium profile presentation
-- Future cross-platform Music Pro identity features
-
-### Premium KPI
-**Paid conversion rate** = Premium subscribers / monthly active users.
-
-For the financial model below, the base case assumes **3% conversion** at **$1.99/month**.
-
-## 4. Artist Promotion — creator monetization
+## 3. Artist Promotion — primary paid discovery layer
 
 Artist Promotion turns Music Pro's project-tracking system into an optional paid discovery channel.
 
@@ -85,35 +71,33 @@ Artist Promotion turns Music Pro's project-tracking system into an optional paid
 - Project launch campaign
 - Audience expectation campaign
 
-### Guardrail
-Paid promotion must be clearly labeled. It must not manipulate ordinary listener evaluations, hide organic results, or turn Music Pro into a pay-to-win reputation system.
+### Guardrails
+Paid promotion must be clearly labeled. It must not manipulate ordinary listener evaluations, falsify audience signals, hide organic results, or turn Music Pro into a pay-to-win reputation system.
 
-### Proposed benchmark
+### Base planning assumption
 **$99 average campaign spend** per promoted project/campaign.
 
-For the base financial model, assume **0.5% of the total user base creates one $99 promotion campaign per month** once the promotion marketplace is mature.
+Assume **0.5% of the total user base creates one $99 promotion campaign per month** once the promotion system reaches mature commercial scale.
 
-## 5. Streaming Partnerships — listening/referral economics
+## 4. Streaming Partnerships — listening/referral economics
 
-Music Pro should not need to own the complete music-streaming catalog to participate in streaming economics.
+Music Pro should participate in streaming economics without needing to own or host the complete music catalog.
 
-### Partnership model
-A project can provide authorized actions such as:
-
+### Authorized partner actions
 - Listen on partner service
 - Save on partner service
 - Follow artist on partner service
 - Open album/episode/song on partner service
 - Continue listening externally
 
-Music Pro receives a negotiated referral, affiliate, advertising, licensing or revenue-share payment where available.
+Music Pro may receive negotiated referral, affiliate, advertising, licensing or revenue-share payments where available.
 
-### Base-case modeling assumption
+### Base planning assumption
 **$0.15 monthly partner revenue per active user** at mature partnership scale.
 
-This is a planning assumption, not a guaranteed market rate. Actual economics will depend on partner contracts, geography, conversion and applicable licensing rules.
+This is a planning assumption, not a guaranteed market rate. Actual economics depend on partner contracts, geography, conversion, licensing and applicable laws.
 
-## 6. Music Marketplace — transaction layer
+## 5. Music Marketplace — transaction layer
 
 The marketplace extends Music Pro from discovery into transactions while preserving the listener/creator relationship.
 
@@ -130,68 +114,81 @@ The marketplace extends Music Pro from discovery into transactions while preserv
 ### Revenue model
 Music Pro earns a **10% platform take rate** on eligible marketplace gross merchandise value (GMV), before payment processing, taxes, refunds and other costs.
 
-For the base model, assume **$2 monthly GMV per total user** at mature marketplace scale.
+### Base planning assumption
+**$2 monthly GMV per total user** at mature marketplace scale.
 
-## 7. Base financial projection
+## 6. Sponsorships and commercial services
 
-These figures are **illustrative planning scenarios**, not forecasts or guaranteed revenue. They use the same assumptions at each scale so the product team can see the economics clearly.
+Optional sponsorships can support free access without charging listeners.
+
+Potential products include:
+- Clearly labeled sponsored discovery areas
+- Artist launch sponsorships
+- Music-event partnerships
+- Brand/music campaigns
+- Creator-service partnerships
+
+Sponsorships must remain clearly distinguished from organic recommendations and listener evaluations.
+
+**V1 financial projection excludes sponsorship revenue** so the core model remains conservative and easier to understand.
+
+## 7. Free-first base financial projection
+
+These figures are **illustrative planning scenarios**, not forecasts or guaranteed revenue. They remove listener subscription revenue entirely.
 
 ### Base assumptions
 
 | Revenue stream | Assumption |
 |---|---:|
-| Premium price | $1.99/month |
-| Premium conversion | 3% of users |
+| Free Core | $0 user subscription |
 | Artist Promotion | 0.5% of users × $99/month |
 | Streaming Partnerships | $0.15/user/month |
 | Marketplace GMV | $2/user/month |
 | Marketplace take rate | 10% |
+| Sponsorships | Excluded from base projection |
 
 ### Monthly revenue at scale
 
-| Users | Premium | Artist Promotion | Streaming Partnerships | Marketplace | Total / month | Annualized |
-|---:|---:|---:|---:|---:|---:|---:|
-| 100,000 | $5,970 | $49,500 | $15,000 | $20,000 | **$90,470** | **$1,085,640** |
-| 1,000,000 | $59,700 | $495,000 | $150,000 | $200,000 | **$904,700** | **$10,856,400** |
-| 10,000,000 | $597,000 | $4,950,000 | $1,500,000 | $2,000,000 | **$9,047,000** | **$108,564,000** |
+| Users | Artist Promotion | Streaming Partnerships | Marketplace | Total / month | Annualized |
+|---:|---:|---:|---:|---:|---:|
+| 100,000 | $49,500 | $15,000 | $20,000 | **$84,500** | **$1,014,000** |
+| 1,000,000 | $495,000 | $150,000 | $200,000 | **$845,000** | **$10,140,000** |
+| 10,000,000 | $4,950,000 | $1,500,000 | $2,000,000 | **$8,450,000** | **$101,400,000** |
 
 ### Revenue per user under the base model
 
-The model produces approximately **$0.9047 monthly revenue per total user**, or **$10.8564 annualized revenue per total user**, before operating costs, payment fees, taxes, licensing costs, partner revenue shares, refunds and other expenses.
+The model produces approximately **$0.845 monthly revenue per total user**, or **$10.14 annualized revenue per total user**, before operating costs, payment fees, taxes, licensing costs, partner revenue shares, refunds and other expenses.
 
-## 8. Conservative / base / upside framing
+The important difference is strategic: **the user pays $0 for the core Music Pro experience.**
 
-The base case should not be treated as the product's only financial scenario.
+## 8. Scenario framing
 
-### Conservative case
-- Premium conversion: 1%
-- Premium: $1.99/month
+The financial model should eventually support conservative, base and upside assumptions dynamically.
+
+### Conservative example
 - Artist Promotion: 0.1% of users × $49/month
 - Streaming Partnerships: $0.05/user/month
 - Marketplace GMV: $0.50/user/month
 - Marketplace take rate: 8%
+- Sponsorships: excluded
 
-### Base case
-- Premium conversion: 3%
-- Premium: $1.99/month
+### Base example
 - Artist Promotion: 0.5% of users × $99/month
 - Streaming Partnerships: $0.15/user/month
 - Marketplace GMV: $2/user/month
 - Marketplace take rate: 10%
+- Sponsorships: excluded
 
-### Upside case
-- Premium conversion: 5%
-- Premium: $2.99/month
+### Upside example
 - Artist Promotion: 1% of users × $149/month
 - Streaming Partnerships: $0.30/user/month
 - Marketplace GMV: $5/user/month
 - Marketplace take rate: 12%
+- Sponsorships: separately modeled
 
-The product dashboard should eventually calculate these scenarios dynamically rather than hard-code them.
+These are planning assumptions only and should be validated with real Music Pro usage and commercial partner data.
 
 ## 9. What must be measured before monetization
-
-Music Pro should build the following analytics into the product architecture:
 
 ### Listener funnel
 - Signups
@@ -203,8 +200,7 @@ Music Pro should build the following analytics into the product architecture:
 - Saves
 - Listening/referral clicks
 - Evaluations
-- Premium conversion
-- Retention/churn
+- Retention
 
 ### Artist funnel
 - Artist registrations
@@ -221,11 +217,19 @@ Music Pro should build the following analytics into the product architecture:
 - Sellers
 - Listings
 - Views
-- Add-to-cart/checkout events where applicable
+- Checkout events where applicable
 - GMV
 - Take-rate revenue
 - Refunds
 - Repeat purchasers
+
+### Commercial funnel
+- Partner clicks
+- Partner conversions
+- Revenue events
+- Sponsored impressions
+- Sponsored conversions
+- Commercial revenue per active user
 
 ## 10. Monetization architecture
 
@@ -236,7 +240,7 @@ Music Pro should build the following analytics into the product architecture:
           |                 |                 |
        LISTENER           ARTIST           PARTNER
           |                 |                 |
-       Free/Premium     Projects        Streaming links
+        FREE CORE       Free Projects     Streaming links
           |                 |                 |
           +--------+--------+--------+--------+
                    |                 |
@@ -244,15 +248,18 @@ Music Pro should build the following analytics into the product architecture:
                    |                 |
                    +--------+--------+
                             |
-                     MUSIC MARKETPLACE
+               +------------+------------+
+               |                         |
+        ARTIST PROMOTION          MUSIC MARKETPLACE
+               |                         |
+               +------------+------------+
+                            |
+                    MUSIC PRO REVENUE
 ```
 
 ### Core commercial entities
 
 ```text
-Subscription
-SubscriptionPlan
-SubscriptionEvent
 PromotionCampaign
 PromotionPlacement
 PromotionPayment
@@ -263,6 +270,8 @@ MarketplaceSeller
 MarketplaceListing
 MarketplaceOrder
 MarketplaceTransaction
+Sponsorship
+CommercialCampaign
 RevenueEvent
 Payout
 ```
@@ -270,9 +279,6 @@ Payout
 ## 11. API additions
 
 ```text
-/api/billing/plans
-/api/billing/subscription
-/api/billing/portal
 /api/promotions
 /api/promotions/:id
 /api/promotions/:id/analytics
@@ -284,60 +290,64 @@ Payout
 /api/marketplace/listings/:id
 /api/marketplace/orders
 /api/marketplace/transactions
+/api/sponsorships
+/api/commercial/campaigns
 /api/revenue/events
 /api/analytics/monetization
 ```
 
 ## 12. Product roadmap
 
-### Phase 1 — Build the audience
-Free listener identity + project tracking.
+### Phase 1 — Free audience
+Free listener identity + free basic artist/project tools.
 
-### Phase 2 — Premium
-Introduce paid listener identity and advanced project features after retention is measurable.
-
-### Phase 3 — Artist Promotion
+### Phase 2 — Artist Promotion
 Introduce clearly labeled paid promotion after Music Pro has meaningful organic discovery traffic.
 
-### Phase 4 — Streaming Partnerships
+### Phase 3 — Streaming Partnerships
 Add authorized partner links and commercial referral/revenue-share relationships.
 
-### Phase 5 — Music Marketplace
+### Phase 4 — Music Marketplace
 Add transactions after identity, discovery, artist tools and partner economics are proven.
+
+### Phase 5 — Sponsorships / commercial services
+Add carefully controlled sponsorship and professional commercial opportunities without compromising organic discovery.
 
 ## 13. Financial rule
 
-Revenue should follow **value creation**:
+Revenue should follow **value creation**, not access restriction:
 
 ```text
-USER VALUE
-   ↓
+FREE USER VALUE
+      ↓
 ENGAGEMENT
-   ↓
+      ↓
 DISCOVERY
-   ↓
+      ↓
 CREATOR VALUE
-   ↓
-TRANSACTION / SUBSCRIPTION / PARTNERSHIP
-   ↓
+      ↓
+OPTIONAL COMMERCIAL ACTIVITY
+      ↓
+TRANSACTION / PROMOTION / PARTNERSHIP
+      ↓
 MUSIC PRO REVENUE
 ```
 
-Music Pro should not monetize private listener data by default. Monetization should be based primarily on explicit subscriptions, clearly labeled promotion, authorized partner activity and transparent marketplace transactions.
+Music Pro should not monetize private listener data by default. Monetization should be based primarily on clearly labeled promotion, authorized partner activity, transparent marketplace transactions and optional sponsorships/commercial services.
 
 ## 14. V1 acceptance criteria
 
 The monetization-ready specification is considered implemented when the product can represent:
 
-- Free and Premium plans
+- Free listener and basic artist access
 - Artist promotion campaigns
 - Streaming partner links/conversions
 - Marketplace listings/orders
 - Revenue events
-- Subscription status
 - Promotion analytics
 - Project-level commercial performance
-- Listener-level subscription and engagement metrics
+- Listener-level engagement metrics
 - 100K / 1M / 10M scenario projections
+- No required listener subscription for core features
 
-**Strategic goal:** Music Pro becomes a music identity and project relationship platform first, then a sustainable commercial infrastructure around that relationship.
+**Strategic goal:** Music Pro becomes a free music identity and project relationship platform first, then a sustainable commercial infrastructure around that relationship.
