@@ -13,6 +13,28 @@ function sync(){
 handle.addEventListener('input',sync);
 track.addEventListener('change',sync);
 
+async function api(path, options={}){
+  const response=await fetch(path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(data.error||`Request failed: ${response.status}`);
+  return data;
+}
+
+async function loadLiveV1(){
+  try{
+    const [health,profile]=await Promise.all([api('/api/health'),api('/api/profile')]);
+    if(profile?.data){
+      handle.value=profile.data.username||handle.value;
+      track.value=profile.data.themeSong||track.value;
+      genre.value=profile.data.primarySound||genre.value;
+      sync();
+    }
+    saved.textContent=`Music Pro ${health.version.toUpperCase()} API connected.`;
+  }catch(error){
+    console.warn('Live V1 API unavailable; using local prototype mode.',error);
+  }
+}
+
 document.querySelector('#playBtn').addEventListener('click',e=>{
   e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';
   saved.textContent=e.currentTarget.textContent==='Ⅱ'?'Theme Song preview playing.':'Theme Song preview paused.';
@@ -47,7 +69,7 @@ function openProject(key){
   document.querySelector('#detailBar').style.width=p.progress+'%';
   document.querySelector('#signalFollowing').textContent=p.following;
   document.querySelector('#signalExpecting').textContent=p.expecting;
-  document.querySelector('#detailTimeline').innerHTML=p.timeline.map((x,i)=>`<span class="${x.startsWith('✓')?'done':x.startsWith('●')?'current':''}">${x}</span>`).join('');
+  document.querySelector('#detailTimeline').innerHTML=p.timeline.map(x=>`<span class="${x.startsWith('✓')?'done':x.startsWith('●')?'current':''}">${x}</span>`).join('');
   projectDetail.hidden=false;
   projectDetail.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -67,12 +89,20 @@ function startBuilder(){document.querySelector('#settings').scrollIntoView({beha
 document.querySelector('#createBtn').addEventListener('click',startBuilder);
 document.querySelector('#createHero').addEventListener('click',startBuilder);
 
-document.querySelector('#saveBtn').addEventListener('click',()=>{
+document.querySelector('#saveBtn').addEventListener('click',async()=>{
   sync();
-  const profile={username:handle.value.trim().replace(/^@/,''),themeSong:track.value,genre:genre.value};
-  localStorage.setItem('musicProfileV1',JSON.stringify(profile));
-  saved.textContent='My Music Pro Profile saved on this device.';
+  const profile={username:handle.value.trim().replace(/^@/,''),themeSong:track.value,primarySound:genre.value};
+  try{
+    await api('/api/profile',{method:'POST',body:JSON.stringify(profile)});
+    localStorage.setItem('musicProfileV1',JSON.stringify(profile));
+    saved.textContent='My Music Pro Profile sent to the V1 API.';
+  }catch(error){
+    localStorage.setItem('musicProfileV1',JSON.stringify(profile));
+    saved.textContent='API unavailable — profile saved locally until live persistence is connected.';
+  }
 });
 
 const stored=localStorage.getItem('musicProfileV1');
-if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.genre||genre.value;sync()}catch{}}
+if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.primarySound||s.genre||genre.value;sync()}catch{}}
+
+loadLiveV1();
