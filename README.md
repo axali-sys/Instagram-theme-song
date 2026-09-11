@@ -1,13 +1,21 @@
-# Music Profile
+# Music Pro
 
-**Your profile has a soundtrack.**
+**Your profile. Your sound.**
 
-Music Profile is a standalone music-identity platform built around a user-selected **Theme Song**. This repository began as the Instagram Theme Song prototype and now serves as the V1 interface foundation for the broader Music Profile platform.
+Music Pro is a standalone music-identity platform built around a user-selected **Theme Song**. This repository began as the Instagram Theme Song prototype and now serves as the V1 interface foundation for Music Pro.
+
+## Product identity
+
+- **Product:** Music Pro
+- **Tagline:** Your profile. Your sound.
+- **Core idea:** Give every person a persistent music identity.
+- **Theme Song:** The defining song attached to a Music Pro profile.
+- **Instagram relationship:** Instagram Theme Song is an integration/use case, not the product name.
 
 ## V1 interface
 
-- Music Profile landing page
-- Public-style profile card
+- Music Pro landing page
+- Public-style music profile card
 - Theme Song player interaction
 - Username, genre and Theme Song builder
 - Music identity chips
@@ -18,19 +26,13 @@ Music Profile is a standalone music-identity platform built around a user-select
 ## Product architecture
 
 ```text
-Web UI
+MUSIC PRO
   |
-  +-- Profile Identity
-  |     +-- username
-  |     +-- avatar
-  |     +-- bio
+  +-- Music Identity
   |     +-- Theme Song
-  |     +-- genres
-  |
-  +-- Music Library
   |     +-- songs
   |     +-- artists
-  |     +-- albums
+  |     +-- genres
   |     +-- playlists
   |
   +-- Social Layer
@@ -38,7 +40,7 @@ Web UI
   |     +-- likes
   |     +-- activity
   |
-  +-- Music Profile API
+  +-- Music Pro API
         |
         +-- licensed music catalog
         +-- authentication
@@ -55,14 +57,14 @@ Web UI
 - Object storage for profile images and artwork
 - Licensed music/catalog provider for playback and metadata
 - Vercel for deployment
-- REST/JSON Music Profile API for future integrations
+- REST/JSON Music Pro API for future integrations
 - Flutter client after the web MVP is validated
 
 ## Core data model
 
 ```text
 User
-Profile
+MusicProfile
 ThemeSong
 Song
 Artist
@@ -99,12 +101,12 @@ The V1 prototype stores music identity and selected-track metadata only. Product
 
 ## Instagram relationship
 
-The original Instagram Theme Song concept remains an integration target. The standalone Music Profile platform should own the music identity layer, while Instagram and other social platforms can consume it through an API or supported integration. Direct audio injection into Instagram is not assumed and requires capabilities supported by Meta's current APIs and review process.
+The original Instagram Theme Song concept remains an integration target. Music Pro owns the music identity layer, while Instagram and other social platforms can consume it through an API or supported integration. Direct audio injection into Instagram is not assumed and requires capabilities supported by Meta's current APIs and review process.
 
 ## Deployment
 
-GitHub is the source of truth. The project can be deployed as a static prototype today and can later migrate to Next.js as the database/API layer is introduced. Vercel provides first-class Next.js deployment and preview workflows.
+GitHub is the source of truth. The current project can be deployed as a static prototype while the Music Pro database/API layer is introduced. Vercel can provide the web deployment and preview workflow.
 
 ## Status
 
-**V1 interface foundation — ready for backend architecture.**
+**Music Pro V1 interface foundation — ready for backend architecture.**
