@@ -3,39 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ThemeSong IG — Profile Theme Prototype</title>
+  <meta name="description" content="Music Profile — a profile with a soundtrack.">
+  <title>Music Profile — Your profile has a soundtrack</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <div class="brand"><span class="mark">♪</span><span>ThemeSong IG</span></div>
-      <span class="status">Standalone prototype</span>
+      <a class="brand" href="./"><span class="mark">♪</span><span>Music Profile</span></a>
+      <nav><a href="#discover">Discover</a><a href="#profile">My Profile</a><button id="createBtn" class="nav-button">Create</button></nav>
     </header>
+
     <section class="hero">
-      <div>
-        <p class="eyebrow">INSTAGRAM PROFILE EXPERIENCE</p>
-        <h1>Give your profile a sound.</h1>
-        <p class="lead">Let account owners choose an authorized theme track and preview how visitors experience their profile.</p>
-        <div class="actions"><button id="connectBtn" class="primary">Connect Instagram</button><button id="previewBtn" class="secondary">Preview profile</button></div>
-        <p id="connectState" class="hint">Demo mode — no Instagram credentials are requested.</p>
+      <div class="hero-copy">
+        <p class="eyebrow">MUSIC IDENTITY PLATFORM</p>
+        <h1>Your profile has a soundtrack.</h1>
+        <p class="lead">Create a music identity built around one defining Theme Song — then share your songs, artists, genres and playlists with the people who follow you.</p>
+        <div class="actions"><button id="createHero" class="primary">Create my Music Profile</button><a href="#profile" class="secondary">Preview profile</a></div>
       </div>
-      <div class="phone" aria-label="Profile preview">
-        <div class="phone-top">9:41 <span>● ● ●</span></div>
-        <div class="avatar">A</div><h2 id="profileName">@yourprofile</h2><p class="bio">Your world. Your sound.</p>
-        <div class="theme-card"><div class="disc">♪</div><div class="track-info"><strong id="trackTitle">Golden Hour</strong><span>Profile theme</span></div><button id="playBtn" class="play" aria-label="Play theme">▶</button></div>
-        <div class="profile-lines"><i></i><i></i><i></i></div>
+      <div class="profile-card" id="profile">
+        <div class="profile-cover"></div>
+        <div class="profile-body">
+          <div class="avatar">A</div>
+          <div class="profile-meta"><div><h2 id="profileName">@yourprofile</h2><p>Music is part of who I am.</p></div><button id="followBtn" class="follow">Follow</button></div>
+          <div class="theme-card"><div class="disc">♪</div><div class="track-info"><strong id="trackTitle">Golden Hour</strong><span>Theme Song · JVKE</span></div><button id="playBtn" class="play" aria-label="Play Theme Song">▶</button></div>
+          <div class="stats"><span><b>24</b> Songs</span><span><b>8</b> Artists</span><span><b>3</b> Playlists</span></div>
+          <div class="chips"><span>Afrobeats</span><span>R&B</span><span>Hip-Hop</span><span>Chill</span></div>
+        </div>
       </div>
     </section>
+
+    <section class="section" id="discover">
+      <div class="section-head"><div><p class="eyebrow">DISCOVER</p><h2>Music identities</h2></div><span class="muted">V1 preview</span></div>
+      <div class="profile-grid">
+        <article class="mini-profile"><div class="mini-art art-one">♪</div><h3>@soundwave</h3><p>Afrobeats · R&B</p><button class="mini-play">▶ Theme Song</button></article>
+        <article class="mini-profile"><div class="mini-art art-two">♫</div><h3>@midnight</h3><p>Hip-Hop · Electronic</p><button class="mini-play">▶ Theme Song</button></article>
+        <article class="mini-profile"><div class="mini-art art-three">♬</div><h3>@daydreamer</h3><p>Pop · Indie</p><button class="mini-play">▶ Theme Song</button></article>
+      </div>
+    </section>
+
     <section class="panel" id="settings">
-      <div class="panel-head"><div><p class="eyebrow">OWNER CONTROLS</p><h2>Theme song settings</h2></div><span class="pill">MVP</span></div>
-      <label>Instagram handle<input id="handle" value="yourprofile" maxlength="30"></label>
-      <label>Theme track<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option></select></label>
-      <label>Playback behavior<select id="behavior"><option>Play on profile visit (where permitted)</option><option>Play intro once</option><option>Loop theme</option><option>Visitor starts manually</option></select></label>
-      <div class="notice"><strong>Integration boundary</strong><span>This prototype demonstrates the experience outside Instagram. Direct Instagram profile audio requires Meta-supported APIs, permissions and App Review.</span></div>
-      <button id="saveBtn" class="primary wide">Save prototype settings</button><p id="saved" class="saved" role="status"></p>
+      <div class="panel-head"><div><p class="eyebrow">PROFILE BUILDER</p><h2>Build your music identity</h2></div><span class="pill">V1</span></div>
+      <label>Username<input id="handle" value="yourprofile" maxlength="30"></label>
+      <label>Theme Song<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option><option>Calm Down</option></select></label>
+      <label>Primary genre<select id="genre"><option>Afrobeats</option><option>R&B</option><option>Hip-Hop</option><option>Pop</option><option>Electronic</option></select></label>
+      <div class="notice"><strong>Music catalog boundary</strong><span>V1 stores the music identity and selected track metadata. A production release will connect to a licensed music catalog/provider rather than host copyrighted recordings directly.</span></div>
+      <button id="saveBtn" class="primary wide">Save Music Profile</button><p id="saved" class="saved" role="status"></p>
     </section>
-    <footer>Prototype v0.1 · Built for GitHub → Vercel development</footer>
+
+    <footer>Music Profile V1 · Theme Song identity layer · Designed for web first, mobile next</footer>
   </main>
   <script src="./app.js"></script>
 </body>
