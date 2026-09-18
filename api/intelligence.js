@@ -1,6 +1,6 @@
 import { readSession } from '../../lib/auth.js';
 
-const MODES = new Set(['discovery','project','audience','profile','moment','release']);
+const MODES = new Set(['discovery','project','audience','profile','moment','release','build']);
 
 function clean(value, max = 4000) {
   return String(value ?? '').trim().slice(0, max);
@@ -21,7 +21,8 @@ function buildPrompt(mode, input) {
     audience: 'Interpret audience signals and expectations without turning them into a simplistic popularity score.',
     profile: 'Help express a user musical identity without changing it without approval.',
     moment: 'Identify whether the supplied listening context could become a Music Moment.',
-    release: 'Act as a release navigator: identify missing release-readiness information and useful next actions.'
+    release: 'Act as a release navigator: identify missing release-readiness information and useful next actions.',
+    build: 'Act as a controlled Music Pro builder: translate a requested feature into a build plan, affected areas, tests, and an approval-gated execution request. Never claim code was changed unless an execution tool confirms it.'
   }[mode];
   return base + ' ' + modeText + '\nCONTEXT:\n' + JSON.stringify(input);
 }
