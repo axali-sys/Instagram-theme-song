@@ -21,3 +21,10 @@ test('Music Pro intelligence endpoint is present', async ()=>{
   assert.match(source, /AI_API_KEY/);
   assert.match(source, /nextActions/);
 });
+
+test('Music Pro build control is approval-gated', async ()=>{
+  const fs = await import('node:fs/promises');
+  const source = await fs.readFile(new URL('../api/intelligence/build.js', import.meta.url), 'utf8');
+  assert.match(source, /approval_required/);
+  assert.match(source, /Human approval/);
+});
