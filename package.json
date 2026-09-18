@@ -1,0 +1,13 @@
+{
+  "name":"music-pro",
+  "private":true,
+  "version":"1.0.0",
+  "type":"module",
+  "engines":{"node":">=20"},
+  "scripts":{"test":"node --test"},
+  "dependencies":{
+    "@neondatabase/serverless":"^1.0.1",
+    "jose":"^6.0.12"
+  },
+  "devDependencies":{}
+}
