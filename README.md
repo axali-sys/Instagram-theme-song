@@ -265,3 +265,25 @@ GitHub is the source of truth. The current project can be deployed as a static p
 ## Status
 
 **Music Pro V1 interface foundation — listener-first profile + musician project/release tracking model.**
+
+
+## Production V1 implementation status
+
+The repository now contains the first production runtime boundary:
+
+- PostgreSQL schema for accounts, profiles, projects, followers and evaluations.
+- Secure HTTP-only session cookies using signed JWTs.
+- Password hashing with Node scrypt.
+- Registration, login, session and logout APIs.
+- Database-backed profile and project APIs.
+- Production readiness health reporting.
+- Environment template and automated Node smoke tests.
+- Account UI wired to the authentication API.
+- Free-first listener/creator model remains the product rule.
+
+### Required deployment configuration
+
+Set DATABASE_URL to the production PostgreSQL connection string and AUTH_SECRET to a long random secret in the deployment environment, then run db/schema.sql once against the database. Optional music-provider, OAuth and storage variables should only be configured when those integrations are actually enabled.
+
+Until those environment values are present, the application intentionally reports configuration_required instead of pretending that data is persistent.
+
