@@ -20,6 +20,7 @@ export default async function handler(req,res){
       const body=String(req.body?.body||'').trim();
       if(!body) return res.status(400).json({error:'body is required'});
       const rows=await sql`INSERT INTO project_updates(project_id,author_id,body) VALUES(${id},${userId},${body.slice(0,5000)}) RETURNING id,body,created_at`;
+      await sql`INSERT INTO notifications(user_id,type,title,body,project_id) SELECT f.user_id,'project_updates',${'New project update'},${body.slice(0,500)},${id} FROM project_followers f LEFT JOIN notification_preferences np ON np.user_id=f.user_id WHERE f.project_id=${id} AND COALESCE(np.project_updates,true)=true AND f.user_id<>${userId}`;
       return res.status(201).json({data:rows[0],persistence:'postgresql'});
     }
     res.setHeader('Allow','GET, POST'); return res.status(405).json({error:'Method not allowed'});
