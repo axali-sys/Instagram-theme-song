@@ -74,7 +74,20 @@
 
     <section class="artist-strip"><div><p class="eyebrow">PART OF MY WORLD</p><h2>Artists I Love</h2><p>Artists are important — but they appear through my relationship with their music and projects.</p></div><div class="artist-chips"><span>Artist 01</span><span>Artist 02</span><span>Artist 03</span><span>+ Discover</span></div></section>
 
-    <section class="panel" id="notifications">
+    <section class="panel" id="creatorDashboard">
+  <div class="panel-head"><div><p class="eyebrow">CREATOR WORKSPACE</p><h2>Project dashboard</h2></div><span class="pill">Creator tools</span></div>
+  <div class="rating-grid">
+    <label>Project title<input id="creatorProjectTitle" maxlength="120" placeholder="My next release"></label>
+    <label>Type<select id="creatorProjectType"><option value="song">Song</option><option value="episode">Episode</option><option value="album">Album</option></select></label>
+    <label>Status<select id="creatorProjectStatus"><option value="idea">Idea</option><option value="planning">Planning</option><option value="creating">Creating</option><option value="preview">Preview</option><option value="ready">Ready</option><option value="released">Released</option></select></label>
+    <label>Progress %<input id="creatorProjectProgress" type="number" min="0" max="100" value="0"></label>
+  </div>
+  <label>Description<textarea id="creatorProjectDescription" maxlength="2000" placeholder="What are you creating?"></textarea></label>
+  <button id="createProjectBtn" class="primary">Create project</button>
+  <p id="creatorMessage" class="saved" role="status"></p>
+</section>
+
+<section class="panel" id="notifications">
   <div class="panel-head"><div><p class="eyebrow">YOUR MUSIC PRO</p><h2>Notifications</h2></div><span class="pill" id="notificationCount">0 unread</span></div>
   <div class="notification-tools"><button id="markNotificationsRead" class="secondary">Mark all read</button><button id="openNotificationSettings" class="secondary">Notification settings</button></div>
   <div id="notificationList" class="notification-list"><p class="saved">Sign in to see your notifications.</p></div>
