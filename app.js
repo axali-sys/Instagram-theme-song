@@ -174,3 +174,21 @@ document.querySelector('#logoutBtn')?.addEventListener('click',async()=>{
   await refreshAccount();
 });
 refreshAccount();
+
+
+async function loadNotifications(){
+  const list=document.querySelector('#notificationList');
+  const count=document.querySelector('#notificationCount');
+  if(!list||!count) return;
+  try{
+    const data=await api('/api/notifications');
+    count.textContent=(data.unreadCount||0)+' unread';
+    list.innerHTML=(data.data||[]).map(n=>'<article class="notification-item '+(n.read_at?'read':'unread')+'"><div><strong>'+n.title+'</strong><p>'+((n.body||'').replace(/</g,'&lt;'))+'</p></div><time>'+new Date(n.created_at).toLocaleString()+'</time></article>').join('')||'<p class="saved">No notifications yet.</p>';
+  }catch{ list.innerHTML='<p class="saved">Sign in to see your notifications.</p>'; count.textContent='0 unread'; }
+}
+document.querySelector('#markNotificationsRead')?.addEventListener('click',async()=>{
+  try{await api('/api/notifications',{method:'POST',body:JSON.stringify({all:true})});await loadNotifications();}catch(error){saved.textContent=error.message;}
+});
+document.querySelector('#openNotificationSettings')?.addEventListener('click',()=>document.querySelector('#settings')?.scrollIntoView({behavior:'smooth'}));
+setInterval(loadNotifications,30000);
+loadNotifications();
