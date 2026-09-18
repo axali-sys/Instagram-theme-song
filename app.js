@@ -61,6 +61,18 @@ const projects={
   song:{title:'New Sound',subtitle:'Song · Artist 03 · Release soon',progress:96,following:'2,104',expecting:'1,120',timeline:['✓ Announced','✓ Preview','✓ Final production','● Release','○ Post-release evaluation']}
 };
 const projectDetail=document.querySelector('#projectDetail');
+async function loadProjectActivity(projectId){
+  const timeline=document.querySelector('#detailTimeline');
+  const updates=document.querySelector('#projectUpdates');
+  const milestones=document.querySelector('#projectMilestones');
+  if(!projectId) return;
+  try{
+    const [m,u]=await Promise.all([api('/api/projects/'+projectId+'/milestones'),api('/api/projects/'+projectId+'/updates')]);
+    if(milestones) milestones.innerHTML=(m.data||[]).map(x=>'<article class="activity-item"><b>'+x.title+'</b><span>'+x.status.replace('_',' ')+'</span>'+(x.description?'<p>'+x.description+'</p>':'')+'</article>').join('')||'<p>No milestones yet.</p>';
+    if(updates) updates.innerHTML=(u.data||[]).map(x=>'<article class="activity-item"><b>@'+x.author+'</b><p>'+x.body+'</p><small>'+new Date(x.created_at).toLocaleDateString()+'</small></article>').join('')||'<p>No updates yet.</p>';
+    if(timeline && (m.data||[]).length) timeline.innerHTML=m.data.map(x=>'<span class="'+(x.status==='completed'?'done':x.status==='in_progress'?'current':'')+'">'+(x.status==='completed'?'✓':x.status==='in_progress'?'●':'○')+' '+x.title+'</span>').join('');
+  }catch(error){ if(milestones) milestones.innerHTML='<p>Project activity unavailable.</p>'; if(updates) updates.innerHTML=''; }
+}
 function openProject(key){
   const p=projects[key];
   document.querySelector('#detailTitle').textContent=p.title;
@@ -71,6 +83,8 @@ function openProject(key){
   document.querySelector('#signalExpecting').textContent=p.expecting;
   document.querySelector('#detailTimeline').innerHTML=p.timeline.map(x=>`<span class="${x.startsWith('✓')?'done':x.startsWith('●')?'current':''}">${x}</span>`).join('');
   projectDetail.hidden=false;
+  const match=Object.values(projects).find(x=>x.title===p.title);
+  api('/api/projects?limit=100').then(r=>{const live=(r.data||[]).find(x=>x.title===p.title); if(live) loadProjectActivity(live.id);}).catch(()=>{});
   projectDetail.scrollIntoView({behavior:'smooth',block:'start'});
 }
 document.querySelectorAll('.open-project').forEach(button=>button.addEventListener('click',()=>openProject(button.dataset.target)));
