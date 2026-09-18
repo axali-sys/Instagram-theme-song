@@ -70,3 +70,23 @@ CREATE TABLE IF NOT EXISTS project_updates (
 
 CREATE INDEX IF NOT EXISTS project_milestones_project_idx ON project_milestones(project_id);
 CREATE INDEX IF NOT EXISTS project_updates_project_idx ON project_updates(project_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT,
+  project_id UUID REFERENCES music_projects(id) ON DELETE CASCADE,
+  read_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE TABLE IF NOT EXISTS notification_preferences (
+  user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  project_updates BOOLEAN NOT NULL DEFAULT TRUE,
+  releases BOOLEAN NOT NULL DEFAULT TRUE,
+  social BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS notifications_user_idx ON notifications(user_id, created_at DESC);
