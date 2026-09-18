@@ -83,7 +83,23 @@ document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEv
   else{button.textContent=button.classList.contains('active')?'★ Expecting':'☆ Expect';}
 }));
 
-document.querySelector('#submitEvaluation').addEventListener('click',()=>{saved.textContent='Your audience evaluation has been saved to this project. Professional/critic evaluation remains separate.'});
+document.querySelector('#submitEvaluation').addEventListener('click',async()=>{
+  const projectKey=document.querySelector('#detailTitle').textContent;
+  const key=Object.keys(projects).find(k=>projects[k].title===projectKey);
+  const projectIds={album:null,episode:null,song:null};
+  if(!key){saved.textContent='Open a project before saving an evaluation.';return;}
+  saved.textContent='Sign in and open a persisted project to save an evaluation.';
+  try{
+    const detail=await api('/api/projects?limit=100');
+    const match=(detail.data||[]).find(p=>p.title===projects[key].title);
+    if(!match) return;
+    const selects=[...document.querySelectorAll('.evaluation select')].map(s=>s.value);
+    await api('/api/projects/'+match.id+'/evaluate',{method:'POST',body:JSON.stringify({
+      overall:selects[0],connection:selects[1],replay:selects[2],expectation:selects[3]
+    })});
+    saved.textContent='Your audience evaluation has been saved to this project.';
+  }catch(error){saved.textContent=error.message;}
+});
 
 function startBuilder(){document.querySelector('#settings').scrollIntoView({behavior:'smooth'});setTimeout(()=>handle.focus(),450)}
 document.querySelector('#createBtn').addEventListener('click',startBuilder);
