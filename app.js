@@ -106,3 +106,41 @@ const stored=localStorage.getItem('musicProfileV1');
 if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.primarySound||s.genre||genre.value;sync()}catch{}}
 
 loadLiveV1();
+
+
+async function refreshAccount(){
+  const state=document.querySelector('#accountState');
+  const forms=document.querySelector('#authForms');
+  const actions=document.querySelector('#accountActions');
+  try{
+    const data=await api('/api/auth/me');
+    state.textContent='Signed in';
+    document.querySelector('#accountTitle').textContent='My Music Pro account';
+    document.querySelector('#accountUser').textContent='Signed in as @'+data.user.username+' · '+data.user.email;
+    forms.hidden=true; actions.hidden=false;
+  }catch{
+    state.textContent='Guest';
+    forms.hidden=false; actions.hidden=true;
+  }
+}
+async function authAction(path){
+  const email=document.querySelector('#authEmail').value.trim();
+  const password=document.querySelector('#authPassword').value;
+  const username=document.querySelector('#authUsername')?.value.trim();
+  const message=document.querySelector('#authMessage');
+  try{
+    const body=path.endsWith('register')?{email,password,username}:{email,password};
+    const data=await api(path,{method:'POST',body:JSON.stringify(body)});
+    message.textContent='Welcome to Music Pro, @'+data.user.username+'. Your session is active.';
+    await refreshAccount();
+    await loadLiveV1();
+  }catch(error){ message.textContent=error.message; }
+}
+document.querySelector('#registerBtn')?.addEventListener('click',()=>authAction('/api/auth/register'));
+document.querySelector('#loginBtn')?.addEventListener('click',()=>authAction('/api/auth/login'));
+document.querySelector('#logoutBtn')?.addEventListener('click',async()=>{
+  await api('/api/auth/logout',{method:'POST'}).catch(()=>{});
+  document.querySelector('#authMessage').textContent='Signed out. Your local preview remains available.';
+  await refreshAccount();
+});
+refreshAccount();
