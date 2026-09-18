@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS project_followers (
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   expecting BOOLEAN NOT NULL DEFAULT FALSE,
   saved BOOLEAN NOT NULL DEFAULT FALSE,
+  expectations TEXT[] NOT NULL DEFAULT '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY(project_id,user_id)
 );
@@ -44,3 +45,5 @@ CREATE TABLE IF NOT EXISTS project_evaluations (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(project_id,user_id)
 );
+
+ALTER TABLE project_followers ADD COLUMN IF NOT EXISTS expectations TEXT[] NOT NULL DEFAULT '{}';
