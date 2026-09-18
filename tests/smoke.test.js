@@ -13,3 +13,11 @@ test('password hashing verifies and rejects changes', async ()=>{
   assert.equal(verifyPassword('MusicPro-test-123',p.salt,p.hash),true);
   assert.equal(verifyPassword('wrong',p.salt,p.hash),false);
 });
+
+test('Music Pro intelligence endpoint is present', async ()=>{
+  const fs = await import('node:fs/promises');
+  const source = await fs.readFile(new URL('../api/intelligence.js', import.meta.url), 'utf8');
+  assert.match(source, /Music Pro Intelligence/);
+  assert.match(source, /AI_API_KEY/);
+  assert.match(source, /nextActions/);
+});
