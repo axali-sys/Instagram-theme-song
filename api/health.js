@@ -1,11 +1,13 @@
-export default function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store');
-  res.status(200).json({
-    service: 'music-pro-api',
-    status: 'ok',
-    version: 'v1',
-    mode: 'live-api-foundation',
-    persistence: 'not-configured',
-    timestamp: new Date().toISOString()
+import { getSql } from '../lib/db.js';
+export default async function handler(req,res){
+  res.setHeader('Cache-Control','no-store');
+  const database=Boolean(process.env.DATABASE_URL);
+  const auth=Boolean(process.env.AUTH_SECRET);
+  let databaseReachable=false;
+  if(database){try{await getSql()`SELECT 1`;databaseReachable=true;}catch{}}
+  res.status(databaseReachable&&auth?200:503).json({
+    service:'music-pro-api',status:databaseReachable&&auth?'ok':'configuration_required',version:'v1',
+    persistence:databaseReachable?'postgresql':'not-configured',authentication:auth?'session-cookie':'not-configured',
+    timestamp:new Date().toISOString()
   });
 }
