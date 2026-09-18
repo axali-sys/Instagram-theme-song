@@ -19,7 +19,10 @@ export default async function handler(req,res){
       if(!owner.length) return res.status(403).json({error:'Only the project creator can add milestones'});
       const title=String(req.body?.title||'').trim();
       if(!title) return res.status(400).json({error:'title is required'});
-      const rows=await sql`INSERT INTO project_milestones(project_id,title,description,status,due_at) VALUES(${id},${title},${String(req.body?.description||'').slice(0,2000)||null},${['planned','in_progress','completed'].includes(req.body?.status)?req.body.status:'planned'},${req.body?.dueAt||null}) RETURNING *`;
+      const status=['planned','in_progress','completed'].includes(req.body?.status)?req.body.status:'planned';
+      const description=String(req.body?.description||'').slice(0,2000)||null;
+      const rows=await sql`INSERT INTO project_milestones(project_id,title,description,status,due_at) VALUES(${id},${title},${description},${status},${req.body?.dueAt||null}) RETURNING *`;
+      await sql`INSERT INTO notifications(user_id,type,title,body,project_id) SELECT f.user_id,'project_updates',${'Project milestone updated'},${title+' is now '+status.replace('_',' ')},${id} FROM project_followers f LEFT JOIN notification_preferences np ON np.user_id=f.user_id WHERE f.project_id=${id} AND COALESCE(np.project_updates,true)=true AND f.user_id<>${userId}`;
       return res.status(201).json({data:rows[0],persistence:'postgresql'});
     }
     res.setHeader('Allow','GET, POST'); return res.status(405).json({error:'Method not allowed'});
