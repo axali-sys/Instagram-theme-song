@@ -47,3 +47,26 @@ CREATE TABLE IF NOT EXISTS project_evaluations (
 );
 
 ALTER TABLE project_followers ADD COLUMN IF NOT EXISTS expectations TEXT[] NOT NULL DEFAULT '{}';
+
+CREATE TABLE IF NOT EXISTS project_milestones (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES music_projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT NOT NULL DEFAULT 'planned' CHECK (status IN ('planned','in_progress','completed')),
+  due_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS project_updates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES music_projects(id) ON DELETE CASCADE,
+  author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS project_milestones_project_idx ON project_milestones(project_id);
+CREATE INDEX IF NOT EXISTS project_updates_project_idx ON project_updates(project_id, created_at DESC);
