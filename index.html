@@ -74,7 +74,21 @@
 
     <section class="artist-strip"><div><p class="eyebrow">PART OF MY WORLD</p><h2>Artists I Love</h2><p>Artists are important — but they appear through my relationship with their music and projects.</p></div><div class="artist-chips"><span>Artist 01</span><span>Artist 02</span><span>Artist 03</span><span>+ Discover</span></div></section>
 
-    <section class="panel" id="settings"><div class="panel-head"><div><p class="eyebrow">PROFILE BUILDER</p><h2>Build my Music Pro identity</h2></div><span class="pill">V1</span></div><label>Username<input id="handle" value="yourprofile" maxlength="30"></label><label>My Theme Song<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option><option>Calm Down</option></select></label><label>My primary sound<select id="genre"><option>Afrobeats</option><option>R&B</option><option>Hip-Hop</option><option>Pop</option><option>Electronic</option></select></label><div class="notice"><strong>Listener-first principle</strong><span>Music Pro connects listener identity to musician projects without making the artist the center of the user's profile. Project progress is creator-reported; audience evaluation is its own signal.</span></div><button id="saveBtn" class="primary wide">Save My Music Pro Profile</button><p id="saved" class="saved" role="status"></p></section>
+    <section class="panel" id="account">
+  <div class="panel-head"><div><p class="eyebrow">ACCOUNT</p><h2 id="accountTitle">Sign in to Music Pro</h2></div><span class="pill" id="accountState">Guest</span></div>
+  <div id="authForms">
+    <div class="rating-grid">
+      <label>Email<input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></label>
+      <label>Password<input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 8 characters"></label>
+      <label id="authUsernameWrap">Username<input id="authUsername" autocomplete="username" placeholder="yourname"></label>
+    </div>
+    <div class="actions"><button id="registerBtn" class="primary">Create account</button><button id="loginBtn" class="secondary">Sign in</button></div>
+    <p class="saved" id="authMessage">Create an account to make your profile, projects and evaluations persistent across devices.</p>
+  </div>
+  <div id="accountActions" hidden><p class="saved" id="accountUser"></p><button id="logoutBtn" class="secondary">Sign out</button></div>
+</section>
+
+<section class="panel" id="settings"><div class="panel-head"><div><p class="eyebrow">PROFILE BUILDER</p><h2>Build my Music Pro identity</h2></div><span class="pill">V1</span></div><label>Username<input id="handle" value="yourprofile" maxlength="30"></label><label>My Theme Song<select id="track"><option>Golden Hour</option><option>Midnight Drive</option><option>New Beginnings</option><option>Calm Down</option></select></label><label>My primary sound<select id="genre"><option>Afrobeats</option><option>R&B</option><option>Hip-Hop</option><option>Pop</option><option>Electronic</option></select></label><div class="notice"><strong>Listener-first principle</strong><span>Music Pro connects listener identity to musician projects without making the artist the center of the user's profile. Project progress is creator-reported; audience evaluation is its own signal.</span></div><button id="saveBtn" class="primary wide">Save My Music Pro Profile</button><p id="saved" class="saved" role="status"></p></section>
 
     <footer>Music Pro V1 · Listener identity + project release layer · Your music relationship comes first</footer>
   </main>
