@@ -192,3 +192,19 @@ document.querySelector('#markNotificationsRead')?.addEventListener('click',async
 document.querySelector('#openNotificationSettings')?.addEventListener('click',()=>document.querySelector('#settings')?.scrollIntoView({behavior:'smooth'}));
 setInterval(loadNotifications,30000);
 loadNotifications();
+
+document.querySelector('#createProjectBtn')?.addEventListener('click',async()=>{
+  const msg=document.querySelector('#creatorMessage');
+  try{
+    const data=await api('/api/projects',{method:'POST',body:JSON.stringify({
+      title:document.querySelector('#creatorProjectTitle').value.trim(),
+      type:document.querySelector('#creatorProjectType').value,
+      status:document.querySelector('#creatorProjectStatus').value,
+      progress:Number(document.querySelector('#creatorProjectProgress').value)||0,
+      description:document.querySelector('#creatorProjectDescription').value.trim()
+    })});
+    msg.textContent='Project created and persisted. Project ID: '+data.data.id;
+    document.querySelector('#creatorProjectTitle').value='';
+    document.querySelector('#creatorProjectDescription').value='';
+  }catch(error){msg.textContent=error.message;}
+});
