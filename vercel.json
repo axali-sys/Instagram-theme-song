@@ -1,4 +1,10 @@
 {
   "version": 2,
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/auth/:route", "destination": "/api/auth?route=:route" },
+    { "source": "/api/intelligence/build", "destination": "/api/intelligence?route=build" },
+    { "source": "/api/notifications/preferences", "destination": "/api/notifications?route=preferences" },
+    { "source": "/api/projects/:id/:action", "destination": "/api/project-actions?id=:id&action=:action" }
+  ]
 }
