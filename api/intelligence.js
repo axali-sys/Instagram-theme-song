@@ -27,7 +27,7 @@ export default async function handler(req,res){
   const apiKey=process.env.AI_API_KEY,apiUrl=process.env.AI_API_URL,model=process.env.AI_MODEL;
   if(!apiKey||!apiUrl||!model)return res.status(503).json({error:'AI service is not configured',required:['AI_API_URL','AI_API_KEY','AI_MODEL']});
   try{
-    const upstream=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization:`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:'system',content:'Return valid JSON only.'},{role:'user',content:buildPrompt(mode,req.body?.input??{})}],temperature:0.2,response_format:{type:'json_object'}})});
+    const upstream=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:'system',content:'Return valid JSON only.'},{role:'user',content:buildPrompt(mode,req.body?.input??{})}],temperature:0.2,response_format:{type:'json_object'}})});
     const raw=await upstream.text();if(!upstream.ok)return res.status(502).json({error:'AI provider request failed',status:upstream.status});
     let payload;try{payload=JSON.parse(raw);}catch{return res.status(502).json({error:'AI provider returned invalid JSON'});}
     const content=payload?.choices?.[0]?.message?.content;if(!content)return res.status(502).json({error:'AI provider returned no content'});
