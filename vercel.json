@@ -1,6 +1,11 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "rewrites": [
     { "source": "/api/auth/:route", "destination": "/api/auth?route=:route" },
     { "source": "/api/intelligence/build", "destination": "/api/intelligence?route=build" },
