@@ -22,11 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify Capacitor packages
-        run: npm ls @capacitor/core @capacitor/cli @capacitor/android
-
-      - name: Install exact Capacitor Android platform
+      - name: Install exact Capacitor toolchain
         run: npm install --no-save @capacitor/android@7.4.3 @capacitor/cli@7.4.3 @capacitor/core@7.4.3
+
+      - name: Verify Capacitor toolchain
+        run: |
+          test -x node_modules/.bin/cap
+          test -d node_modules/@capacitor/android
+          node -e "const p=require('./node_modules/@capacitor/android/package.json'); if(p.version!=='7.4.3') process.exit(1); console.log('Capacitor Android '+p.version+' ready')"
+          node_modules/.bin/cap --version
 
       - name: Prepare web assets
         run: |
@@ -35,7 +39,12 @@ jobs:
           cp -R icons www/icons
 
       - name: Create Android project
-        run: npx --yes @capacitor/cli@7.4.3 add android --verbose
+        run: |
+          rm -rf android
+          node_modules/.bin/cap add android --verbose
+          test -f android/settings.gradle
+          test -f android/app/build.gradle
+          echo "Android project created successfully"
 
       - name: Sync Music Pro into Android
         run: npx cap sync android
