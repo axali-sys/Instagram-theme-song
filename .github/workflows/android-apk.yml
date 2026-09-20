@@ -22,11 +22,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify Capacitor packages
+        run: npm ls @capacitor/core @capacitor/cli @capacitor/android
+
       - name: Create Android project
-        run: npx cap add android
+        run: npx cap add android --verbose
 
       - name: Sync Music Pro into Android
         run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
 
       - name: Build debug APK
         working-directory: android
