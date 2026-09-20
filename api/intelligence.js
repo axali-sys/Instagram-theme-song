@@ -8,6 +8,30 @@ function buildPrompt(mode,input){
   const modeText={discovery:'Help interpret a listener discovery request and suggest relevant directions.',project:'Act as a project companion: interpret project state and identify useful next steps.',audience:'Interpret audience signals and expectations without turning them into a simplistic popularity score.',profile:'Help express a user musical identity without changing it without approval.',moment:'Identify whether the supplied listening context could become a Music Moment.',release:'Act as a release navigator: identify missing release-readiness information and useful next actions.',build:'Act as a controlled Music Pro builder: translate a requested feature into a build plan, affected areas, tests, and an approval-gated execution request. Never claim code was changed unless an execution tool confirms it.'}[mode];
   return base+' '+modeText+'\nCONTEXT:\n'+JSON.stringify(input);
 }
+async function callWronAI({url,key,model,messages}){
+  const protocol=String(process.env.WRONAI_PROTOCOL||'openai').toLowerCase();
+  const headers={'Content-Type':'application/json'};
+  if(key) headers.Authorization=`Bearer ${key}`;
+  const body=protocol==='ollama'
+    ? {model,messages,stream:false,options:{temperature:0.2}}
+    : {model,messages,temperature:0.2,response_format:{type:'json_object'}};
+  const upstream=await fetch(url,{method:'POST',headers,body:JSON.stringify(body)});
+  const raw=await upstream.text();
+  if(!upstream.ok) throw new Error(`WRONAI_HTTP_${upstream.status}`);
+  let payload;try{payload=JSON.parse(raw);}catch{throw new Error('WRONAI_INVALID_JSON');}
+  const content=protocol==='ollama'
+    ? payload?.message?.content
+    : payload?.choices?.[0]?.message?.content;
+  if(!content) throw new Error('WRONAI_NO_CONTENT');
+  return content;
+}
+async function callConfiguredAI({url,key,model,messages}){
+  const upstream=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify({model,messages,temperature:0.2,response_format:{type:'json_object'}})});
+  const raw=await upstream.text();if(!upstream.ok)throw new Error(`AI_HTTP_${upstream.status}`);
+  let payload;try{payload=JSON.parse(raw);}catch{throw new Error('AI_INVALID_JSON');}
+  const content=payload?.choices?.[0]?.message?.content;if(!content)throw new Error('AI_NO_CONTENT');
+  return content;
+}
 export default async function handler(req,res){
   res.setHeader('Content-Type','application/json');res.setHeader('Cache-Control','no-store');
   const route=String(req.query?.route||'').toLowerCase();
@@ -24,14 +48,19 @@ export default async function handler(req,res){
   const userId=await readSession(req);if(!userId)return res.status(401).json({error:'Authentication required'});
   const mode=clean(req.body?.mode,40);
   if(!MODES.has(mode))return res.status(400).json({error:'Unsupported intelligence mode'});
-  const apiKey=process.env.AI_API_KEY,apiUrl=process.env.AI_API_URL,model=process.env.AI_MODEL;
-  if(!apiKey||!apiUrl||!model)return res.status(503).json({error:'AI service is not configured',required:['AI_API_URL','AI_API_KEY','AI_MODEL']});
+  const useWronAI=String(process.env.AI_PROVIDER||'').toLowerCase()==='wronai';
+  const apiUrl=useWronAI?process.env.WRONAI_API_URL:process.env.AI_API_URL;
+  const apiKey=useWronAI?process.env.WRONAI_API_KEY:process.env.AI_API_KEY;
+  const model=useWronAI?process.env.WRONAI_MODEL:process.env.AI_MODEL;
+  if(!apiUrl||(!useWronAI&&!apiKey)||!model)return res.status(503).json({error:useWronAI?'WronAI service is not configured':'AI service is not configured',required:useWronAI?['WRONAI_API_URL','WRONAI_MODEL']:['AI_API_URL','AI_API_KEY','AI_MODEL']});
   try{
-    const upstream=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify({model,messages:[{role:'system',content:'Return valid JSON only.'},{role:'user',content:buildPrompt(mode,req.body?.input??{})}],temperature:0.2,response_format:{type:'json_object'}})});
-    const raw=await upstream.text();if(!upstream.ok)return res.status(502).json({error:'AI provider request failed',status:upstream.status});
-    let payload;try{payload=JSON.parse(raw);}catch{return res.status(502).json({error:'AI provider returned invalid JSON'});}
-    const content=payload?.choices?.[0]?.message?.content;if(!content)return res.status(502).json({error:'AI provider returned no content'});
+    const messages=[{role:'system',content:'Return valid JSON only.'},{role:'user',content:buildPrompt(mode,req.body?.input??{})}];
+    const content=useWronAI?await callWronAI({url:apiUrl,key:apiKey,model,messages}):await callConfiguredAI({url:apiUrl,key:apiKey,model,messages});
     let result;try{result=JSON.parse(content);}catch{return res.status(502).json({error:'AI provider returned non-JSON content'});}
-    return res.status(200).json({ok:true,mode,result});
-  }catch{return res.status(502).json({error:'Unable to reach AI provider'});}
+    return res.status(200).json({ok:true,mode,provider:useWronAI?'wronai':'configured',result});
+  }catch(error){
+    const code=String(error?.message||'');
+    if(code.startsWith('WRONAI_'))return res.status(502).json({error:'Unable to reach WronAI',code});
+    return res.status(502).json({error:'Unable to reach AI provider'});
+  }
 }
