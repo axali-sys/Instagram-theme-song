@@ -1,7 +1,7 @@
 {
   "appId": "com.musicpro.app",
   "appName": "Music Pro",
-  "webDir": ".",
+  "webDir": "www",
   "server": {
     "androidScheme": "https"
   }
