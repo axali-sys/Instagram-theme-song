@@ -25,8 +25,17 @@ jobs:
       - name: Verify Capacitor packages
         run: npm ls @capacitor/core @capacitor/cli @capacitor/android
 
+      - name: Install exact Capacitor Android platform
+        run: npm install --no-save @capacitor/android@7.4.3 @capacitor/cli@7.4.3 @capacitor/core@7.4.3
+
+      - name: Prepare web assets
+        run: |
+          mkdir -p www
+          cp index.html styles.css app.js manifest.webmanifest sw.js www/
+          cp -R icons www/icons
+
       - name: Create Android project
-        run: npx cap add android --verbose
+        run: npx --yes @capacitor/cli@7.4.3 add android --verbose
 
       - name: Sync Music Pro into Android
         run: npx cap sync android
