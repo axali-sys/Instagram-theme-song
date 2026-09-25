@@ -1,0 +1,64 @@
+name: Music Pro Android V1
+
+on:
+  push:
+    branches:
+      - main
+      - music-pro-v1-complete
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --no-package-lock
+      - name: Verify Capacitor
+        run: |
+          test "$(node -p "require('./node_modules/@capacitor/core/package.json').version")" = "7.4.3"
+          test "$(node -p "require('./node_modules/@capacitor/android/package.json').version")" = "7.4.3"
+          npx cap --version
+      - name: Prepare web assets
+        run: |
+          rm -rf www
+          mkdir -p www/icons
+          cp index.html styles.css app.js manifest.webmanifest sw.js www/
+          cp -R icons/. www/icons/
+          test -f www/index.html
+          test -f www/manifest.webmanifest
+          test -f www/icons/music-pro.svg
+      - name: Create or reuse Android project
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+          test -f android/gradlew
+          test -f android/settings.gradle || test -f android/settings.gradle.kts
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Verify APK exists
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: music-pro-v1-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
