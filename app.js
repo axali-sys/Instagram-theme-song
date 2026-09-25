@@ -20,6 +20,36 @@ async function api(path, options={}){
   return data;
 }
 
+async function loadListenerLibrary(){
+  const calls=[['/api/favorites','#favoritesList'],['/api/listening','#listeningList'],['/api/playlists','#playlistList']];
+  for(const [path,selector] of calls){
+    try{
+      const r=await api(path); const el=document.querySelector(selector); if(!el)continue;
+      if(path.endsWith('favorites')) el.innerHTML=(r.data||[]).map(x=>'<div class="song-row"><div class="song-art">♪</div><div><strong>'+x.title+'</strong><span>'+((x.artist||'').replace(/</g,'&lt;'))+'</span></div></div>').join('')||'<p class="saved">No favorites yet.</p>';
+      if(path.endsWith('listening')) el.innerHTML=(r.data||[]).slice(0,8).map(x=>'<div class="activity"><span class="activity-dot"></span><div><strong>'+x.title+'</strong><span>'+((x.artist||'').replace(/</g,'&lt;'))+'</span></div><time>'+new Date(x.played_at).toLocaleDateString()+'</time></div>').join('')||'<p class="saved">No listening activity yet.</p>';
+      if(path.endsWith('playlists')) el.innerHTML=(r.data||[]).map(x=>'<div class="playlist">'+x.name+'<br><span>'+x.item_count+' songs</span></div>').join('')||'<p class="saved">No playlists yet.</p>';
+    }catch{}
+  }
+}
+
+async function loadListenerHome(){
+  try{
+    const r=await api('/api/discovery'); const d=r.data||{};
+    const forYou=document.querySelector('#forYouFeed');
+    if(forYou){
+      forYou.innerHTML=(d.forYou||[]).slice(0,6).map(p=>'<article class="listener-feature-card"><span class="feed-kicker">'+p.type.toUpperCase()+'</span><h3>'+p.title+'</h3><p>@'+p.artist+' · '+p.status.replace('_',' ')+' · '+p.progress+'% creator-reported progress</p><button class="feed-action home-project" data-project-id="'+p.id+'">View project →</button></article>').join('')||'<article class="listener-feature-card"><h3>No projects yet</h3><p>Projects will appear here when they are available.</p></article>';
+      forYou.querySelectorAll('.home-project').forEach(b=>b.addEventListener('click',()=>{saved.textContent='Open the project tracker below to follow this project.';document.querySelector('#projects')?.scrollIntoView({behavior:'smooth'});}));
+    }
+    const coming=document.querySelector('#comingSoonList');
+    if(coming) coming.innerHTML=(d.comingSoon||[]).map(p=>'<article><div><strong>'+p.title+'</strong><span>@'+p.artist+' · '+(p.expected_release?new Date(p.expected_release).toLocaleDateString():'release date not set')+'</span></div><button class="feed-action" data-project-id="'+p.id+'">Track</button></article>').join('')||'<p class="listener-view-note">No followed or expected projects yet.</p>';
+    const people=document.querySelector('#peopleLikeMeList');
+    if(people) people.innerHTML=(d.peopleLikeMe||[]).map(p=>'<span>♪ @'+p.username+'</span>').join('')||'<span>No matching listeners yet.</span>';
+    const summary=document.querySelector('#momentSummary');
+    if(summary) summary.textContent=(d.moments||[]).length+' private Music Moment'+((d.moments||[]).length===1?'':'s')+' saved.';
+  }catch(error){}
+}
+document.querySelector('#homeMomentBtn')?.addEventListener('click',()=>document.querySelector('#momentBtn')?.click());
+
 async function loadLiveV1(){
   try{
     const [health,profile]=await Promise.all([api('/api/health'),api('/api/profile')]);
@@ -35,24 +65,43 @@ async function loadLiveV1(){
   }
 }
 
-document.querySelector('#playBtn').addEventListener('click',e=>{
+document.querySelector('#playBtn').addEventListener('click',async e=>{
   e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';
   saved.textContent=e.currentTarget.textContent==='Ⅱ'?'Theme Song preview playing.':'Theme Song preview paused.';
+  if(e.currentTarget.textContent==='Ⅱ'){
+    try{await api('/api/listening',{method:'POST',body:JSON.stringify({trackKey:'theme:'+track.value,title:track.value,artist:''})});}catch{}
+  }
 });
 document.querySelector('#followBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='Follow'?'Following':'Follow'});
 
 document.querySelectorAll('.engage').forEach(button=>{
-  button.addEventListener('click',()=>{
+  button.addEventListener('click',async()=>{
     const action=button.dataset.action;
-    if(action==='Like'||action==='Save'){
+    if(action==='Save'){
+      const active=!button.classList.contains('active');
+      try{
+        await api('/api/favorites',{method:active?'POST':'DELETE',body:JSON.stringify({trackKey:'theme:'+track.value,title:track.value,artist:''})});
+        button.classList.toggle('active',active); button.querySelector('span').textContent=active?'Saved':'Save';
+        saved.textContent=active?'Theme Song saved to Favorites.':'Theme Song removed from Favorites.';
+      }catch(error){saved.textContent=error.message;}
+    }else if(action==='Like'){
       button.classList.toggle('active');
-      button.querySelector('span').textContent=button.classList.contains('active')?(action==='Like'?'Liked':'Saved'):action;
+      button.querySelector('span').textContent=button.classList.contains('active')?'Liked':'Like';
     }else{navigator.clipboard?.writeText(window.location.href);saved.textContent='Music Profile link copied.';}
   });
 });
 
 document.querySelectorAll('.mini-follow').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent==='Follow'?'Following':'Follow'}));
-document.querySelector('#momentBtn').addEventListener('click',()=>{saved.textContent='Music Moment creator is ready for the next V1 step.'});
+document.querySelector('#momentBtn').addEventListener('click',async()=>{
+  const song=prompt('Song or track title for this Music Moment:',track.value);
+  if(!song)return;
+  const body=prompt('What does this song mean to you?');
+  if(!body)return;
+  try{
+    await api('/api/moments',{method:'POST',body:JSON.stringify({songTitle:song,body,visibility:'private'})});
+    saved.textContent='Private Music Moment saved.';
+  }catch(error){saved.textContent=error.message;}
+});
 document.querySelectorAll('.mini-play').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent.includes('Listen')?'Ⅱ Playing their Theme Song':'▶ Listen to their Theme Song'}));
 
 const projects={
@@ -90,11 +139,23 @@ function openProject(key){
 document.querySelectorAll('.open-project').forEach(button=>button.addEventListener('click',()=>openProject(button.dataset.target)));
 document.querySelector('#closeProject').addEventListener('click',()=>{projectDetail.hidden=true});
 
-document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEventListener('click',()=>{
-  const tracking=button.classList.contains('track-btn');
-  button.classList.toggle('active');
-  if(tracking){button.textContent=button.classList.contains('active')?'Following':'Follow';}
-  else{button.textContent=button.classList.contains('active')?'★ Expecting':'☆ Expect';}
+document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEventListener('click',async()=>{
+  const card=button.closest('.project-card'); const title=card?.querySelector('h3')?.textContent?.trim(); const tracking=button.classList.contains('track-btn');
+  if(!title){return;}
+  try{
+    const listing=await api('/api/projects?limit=100'); const project=(listing.data||[]).find(p=>p.title===title);
+    if(!project)throw new Error('This project is not yet available in the connected database.');
+    if(tracking){
+      const active=!button.classList.contains('active');
+      await api('/api/projects/'+project.id+'/follow',{method:active?'POST':'DELETE'});
+      button.classList.toggle('active',active); button.textContent=active?'Following':'Follow';
+    }else{
+      const active=!button.classList.contains('active');
+      const expectations=active?['release_date']:[]; 
+      await api('/api/projects/'+project.id+'/expectations',{method:'POST',body:JSON.stringify({expectations})});
+      button.classList.toggle('active',active); button.textContent=active?'★ Expecting':'☆ Expect';
+    }
+  }catch(error){saved.textContent=error.message;}
 }));
 
 document.querySelector('#submitEvaluation').addEventListener('click',async()=>{
@@ -136,6 +197,8 @@ const stored=localStorage.getItem('musicProfileV1');
 if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.primarySound||s.genre||genre.value;sync()}catch{}}
 
 loadLiveV1();
+loadListenerHome();
+loadListenerLibrary();
 
 
 async function refreshAccount(){

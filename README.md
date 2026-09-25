@@ -287,3 +287,70 @@ Set DATABASE_URL to the production PostgreSQL connection string and AUTH_SECRET 
 
 Until those environment values are present, the application intentionally reports configuration_required instead of pretending that data is persistent.
 
+
+
+## V1 completion and runtime
+
+The V1 implementation keeps the existing web application and adds the production runtime boundary without creating a second project.
+
+### Listener data
+Authenticated listener data is persisted in PostgreSQL for:
+- Music Moments (private by default)
+- Favorites
+- Listening activity
+- Playlists and playlist items
+- Project follows, likes and expectations
+
+The listener home loads For You, Coming Soon, People Like Me and Music Moments from the authenticated API. It does not fabricate private listening history or sensitive profiling.
+
+### Local setup
+
+1. Install Node.js 24 for the web/Vercel runtime.
+2. Run `npm install --no-audit --no-fund --no-package-lock`.
+3. Copy `.env.example` to `.env` and configure the required values.
+4. Apply `db/schema.sql` to the PostgreSQL database.
+5. Serve the static web root with a local HTTP server that routes `/api/*` to the Vercel-style API handlers, or use the Vercel CLI for local serverless testing.
+6. Run `npm test`.
+
+Required production variables:
+- `DATABASE_URL`
+- `AUTH_SECRET`
+- AI provider credentials only when the configured AI provider is enabled.
+
+### Android APK
+
+The repository uses the existing Capacitor configuration (`com.musicpro.app`, webDir `www`) and does not maintain a second Android project.
+
+GitHub Actions workflow: `.github/workflows/android-build.yml`
+
+The workflow:
+1. Uses Node 20.
+2. Installs the existing Capacitor 7.4.3 packages.
+3. Builds the `www/` web asset directory from the existing app.
+4. Creates the Android project only when the repository does not already contain one, then runs Capacitor sync.
+5. Uses Java 21.
+6. Runs Gradle `assembleDebug`.
+7. Verifies `app-debug.apk`.
+8. Uploads the APK as the `music-pro-v1-debug-apk` artifact.
+
+### Vercel
+
+The existing Vercel project remains the deployment target. The repository config uses Node 24 for API functions and does not contain production secrets.
+
+Production deployment requires human approval.
+
+### AI integration
+
+The existing Music Pro Intelligence endpoint supports discovery, project, audience, profile, moment, release and approval-gated build modes. It uses only supplied context and does not claim that code changed unless a development tool actually changes it.
+
+WronAI/OpenAI-compatible provider settings are documented in `.env.example`. AI requests have a bounded upstream timeout and basic serverless rate limiting.
+
+### Security
+
+Authentication uses HTTP-only secure SameSite cookies and Node scrypt password hashing. API authorization is checked server-side. Private authenticated API responses are excluded from the service-worker cache.
+
+## V1 status
+
+**CODE COMPLETE → TESTED → VALIDATED → PULL REQUEST READY → WAITING FOR HUMAN APPROVAL**
+
+Production deployment requires human approval.

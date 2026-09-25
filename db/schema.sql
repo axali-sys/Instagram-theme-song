@@ -90,3 +90,66 @@ CREATE TABLE IF NOT EXISTS notification_preferences (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS notifications_user_idx ON notifications(user_id, created_at DESC);
+
+
+CREATE TABLE IF NOT EXISTS music_moments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  project_id UUID REFERENCES music_projects(id) ON DELETE SET NULL,
+  track_key TEXT,
+  song_title TEXT NOT NULL,
+  artist TEXT,
+  body TEXT NOT NULL,
+  visibility TEXT NOT NULL DEFAULT 'private' CHECK (visibility IN ('private','shared')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS music_moments_user_idx ON music_moments(user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS playlists (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS playlists_user_idx ON playlists(user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS playlist_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  playlist_id UUID NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
+  track_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  artist TEXT,
+  position INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(playlist_id, track_key)
+);
+CREATE INDEX IF NOT EXISTS playlist_items_playlist_idx ON playlist_items(playlist_id, position);
+
+CREATE TABLE IF NOT EXISTS favorites (
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  track_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  artist TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(user_id, track_key)
+);
+CREATE INDEX IF NOT EXISTS favorites_user_idx ON favorites(user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS listening_activity (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  track_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  artist TEXT,
+  played_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS listening_activity_user_idx ON listening_activity(user_id, played_at DESC);
+
+CREATE TABLE IF NOT EXISTS project_likes (
+  project_id UUID NOT NULL REFERENCES music_projects(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(project_id, user_id)
+);
