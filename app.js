@@ -182,7 +182,7 @@ async function loadNotifications(){
   if(!list||!count) return;
   try{
     const data=await api('/api/notifications');
-    count.textContent=(data.unreadCount||0)+' unread';
+    count.textContent=(data.unreadCount ?? data.unread ?? 0)+' unread';
     list.innerHTML=(data.data||[]).map(n=>'<article class="notification-item '+(n.read_at?'read':'unread')+'"><div><strong>'+n.title+'</strong><p>'+((n.body||'').replace(/</g,'&lt;'))+'</p></div><time>'+new Date(n.created_at).toLocaleString()+'</time></article>').join('')||'<p class="saved">No notifications yet.</p>';
   }catch{ list.innerHTML='<p class="saved">Sign in to see your notifications.</p>'; count.textContent='0 unread'; }
 }
