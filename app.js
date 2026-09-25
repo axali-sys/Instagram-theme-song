@@ -35,24 +35,43 @@ async function loadLiveV1(){
   }
 }
 
-document.querySelector('#playBtn').addEventListener('click',e=>{
+document.querySelector('#playBtn').addEventListener('click',async e=>{
   e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';
   saved.textContent=e.currentTarget.textContent==='Ⅱ'?'Theme Song preview playing.':'Theme Song preview paused.';
+  if(e.currentTarget.textContent==='Ⅱ'){
+    try{await api('/api/listening',{method:'POST',body:JSON.stringify({trackKey:'theme:'+track.value,title:track.value,artist:''})});}catch{}
+  }
 });
 document.querySelector('#followBtn').addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='Follow'?'Following':'Follow'});
 
 document.querySelectorAll('.engage').forEach(button=>{
-  button.addEventListener('click',()=>{
+  button.addEventListener('click',async()=>{
     const action=button.dataset.action;
-    if(action==='Like'||action==='Save'){
+    if(action==='Save'){
+      const active=!button.classList.contains('active');
+      try{
+        await api('/api/favorites',{method:active?'POST':'DELETE',body:JSON.stringify({trackKey:'theme:'+track.value,title:track.value,artist:''})});
+        button.classList.toggle('active',active); button.querySelector('span').textContent=active?'Saved':'Save';
+        saved.textContent=active?'Theme Song saved to Favorites.':'Theme Song removed from Favorites.';
+      }catch(error){saved.textContent=error.message;}
+    }else if(action==='Like'){
       button.classList.toggle('active');
-      button.querySelector('span').textContent=button.classList.contains('active')?(action==='Like'?'Liked':'Saved'):action;
+      button.querySelector('span').textContent=button.classList.contains('active')?'Liked':'Like';
     }else{navigator.clipboard?.writeText(window.location.href);saved.textContent='Music Profile link copied.';}
   });
 });
 
 document.querySelectorAll('.mini-follow').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent==='Follow'?'Following':'Follow'}));
-document.querySelector('#momentBtn').addEventListener('click',()=>{saved.textContent='Music Moment creator is ready for the next V1 step.'});
+document.querySelector('#momentBtn').addEventListener('click',async()=>{
+  const song=prompt('Song or track title for this Music Moment:',track.value);
+  if(!song)return;
+  const body=prompt('What does this song mean to you?');
+  if(!body)return;
+  try{
+    await api('/api/moments',{method:'POST',body:JSON.stringify({songTitle:song,body,visibility:'private'})});
+    saved.textContent='Private Music Moment saved.';
+  }catch(error){saved.textContent=error.message;}
+});
 document.querySelectorAll('.mini-play').forEach(button=>button.addEventListener('click',()=>{button.textContent=button.textContent.includes('Listen')?'Ⅱ Playing their Theme Song':'▶ Listen to their Theme Song'}));
 
 const projects={
@@ -90,11 +109,23 @@ function openProject(key){
 document.querySelectorAll('.open-project').forEach(button=>button.addEventListener('click',()=>openProject(button.dataset.target)));
 document.querySelector('#closeProject').addEventListener('click',()=>{projectDetail.hidden=true});
 
-document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEventListener('click',()=>{
-  const tracking=button.classList.contains('track-btn');
-  button.classList.toggle('active');
-  if(tracking){button.textContent=button.classList.contains('active')?'Following':'Follow';}
-  else{button.textContent=button.classList.contains('active')?'★ Expecting':'☆ Expect';}
+document.querySelectorAll('.track-btn,.expect-btn').forEach(button=>button.addEventListener('click',async()=>{
+  const card=button.closest('.project-card'); const title=card?.querySelector('h3')?.textContent?.trim(); const tracking=button.classList.contains('track-btn');
+  if(!title){return;}
+  try{
+    const listing=await api('/api/projects?limit=100'); const project=(listing.data||[]).find(p=>p.title===title);
+    if(!project)throw new Error('This project is not yet available in the connected database.');
+    if(tracking){
+      const active=!button.classList.contains('active');
+      await api('/api/projects/'+project.id+'/follow',{method:active?'POST':'DELETE'});
+      button.classList.toggle('active',active); button.textContent=active?'Following':'Follow';
+    }else{
+      const active=!button.classList.contains('active');
+      const expectations=active?['release_date']:[]; 
+      await api('/api/projects/'+project.id+'/expectations',{method:'POST',body:JSON.stringify({expectations})});
+      button.classList.toggle('active',active); button.textContent=active?'★ Expecting':'☆ Expect';
+    }
+  }catch(error){saved.textContent=error.message;}
 }));
 
 document.querySelector('#submitEvaluation').addEventListener('click',async()=>{
