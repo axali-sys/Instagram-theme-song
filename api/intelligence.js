@@ -15,7 +15,7 @@ async function callWronAI({url,key,model,messages}){
   const body=protocol==='ollama'
     ? {model,messages,stream:false,options:{temperature:0.2}}
     : {model,messages,temperature:0.2,response_format:{type:'json_object'}};
-  const upstream=await fetch(url,{method:'POST',headers,body:JSON.stringify(body)});
+  const upstream=await fetch(url,{method:'POST',headers,body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
   const raw=await upstream.text();
   if(!upstream.ok) throw new Error(`WRONAI_HTTP_${upstream.status}`);
   let payload;try{payload=JSON.parse(raw);}catch{throw new Error('WRONAI_INVALID_JSON');}
@@ -26,7 +26,7 @@ async function callWronAI({url,key,model,messages}){
   return content;
 }
 async function callConfiguredAI({url,key,model,messages}){
-  const upstream=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify({model,messages,temperature:0.2,response_format:{type:'json_object'}})});
+  const upstream=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify({model,messages,temperature:0.2,response_format:{type:'json_object'}}),signal:AbortSignal.timeout(30000)});
   const raw=await upstream.text();if(!upstream.ok)throw new Error(`AI_HTTP_${upstream.status}`);
   let payload;try{payload=JSON.parse(raw);}catch{throw new Error('AI_INVALID_JSON');}
   const content=payload?.choices?.[0]?.message?.content;if(!content)throw new Error('AI_NO_CONTENT');

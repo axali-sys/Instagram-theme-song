@@ -17,12 +17,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm install --no-audit --no-fund --no-package-lock
       - name: JavaScript syntax validation
         run: |
           node --check app.js
           for f in api/*.js lib/*.js; do node --check "$f"; done
       - name: Smoke tests
         run: npm test
+      - name: Production configuration checks
+        run: |
+          test -f vercel.json
+          test -f .env.example
+          node --check api/intelligence.js
+          node --check api/auth.js
