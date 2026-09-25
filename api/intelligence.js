@@ -38,6 +38,8 @@ export default async function handler(req,res){
   const route=String(req.query?.route||'').toLowerCase();
   if(route==='build'){
     if(req.method!=='POST'){res.setHeader('Allow','POST');return res.status(405).json({error:'Method not allowed'});}
+  const guard=rateLimit(clientKey(req,'ai'),{limit:30,windowMs:60*1000});
+  if(!guard.allowed){res.setHeader('Retry-After',String(guard.retryAfter));return res.status(429).json({error:'Too many AI requests'});}
     const userId=await readSession(req);if(!userId)return res.status(401).json({error:'Authentication required'});
     const action=clean(req.body?.action,40),command=clean(req.body?.command,4000);
     if(!BUILD_ACTIONS.has(action))return res.status(400).json({error:'Unsupported build action'});
