@@ -1,5 +1,6 @@
 import { requireSql } from '../lib/db.js';
 import { hashPassword, verifyPassword, issueSession, publicUser, setSession, clearSession, readSession } from '../lib/auth.js';
+import { rateLimit, clientKey } from '../lib/rate-limit.js';
 
 export default async function handler(req,res){
   const route=String(req.query?.route||'').toLowerCase();
@@ -20,6 +21,8 @@ export default async function handler(req,res){
     }
     if(route==='register'){
       if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+      const guard=rateLimit(clientKey(req,'register'),{limit:5,windowMs:15*60*1000});
+      if(!guard.allowed){res.setHeader('Retry-After',String(guard.retryAfter));return res.status(429).json({error:'Too many registration attempts'});}
       const sql=requireSql();
       const {email,password,username}=req.body||{};
       const normalized=String(email||'').trim().toLowerCase();
@@ -36,6 +39,8 @@ export default async function handler(req,res){
     }
     if(route==='login'){
       if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
+      const guard=rateLimit(clientKey(req,'login'),{limit:10,windowMs:5*60*1000});
+      if(!guard.allowed){res.setHeader('Retry-After',String(guard.retryAfter));return res.status(429).json({error:'Too many login attempts'});}
       const sql=requireSql();
       const email=String(req.body?.email||'').trim().toLowerCase();
       const password=String(req.body?.password||'');
