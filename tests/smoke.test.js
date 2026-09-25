@@ -34,3 +34,16 @@ test('Music Pro serverless function consolidation is present', async ()=>{
   assert.match(notifications,/preferences/);
   assert.match(vercel,/project-actions/);
 });
+
+
+test('listener-first V1 home experience is present', async ()=>{
+  const fs=await import('node:fs/promises');
+  const [html,js,css]=await Promise.all([
+    fs.readFile(new URL('../index.html',import.meta.url),'utf8'),
+    fs.readFile(new URL('../app.js',import.meta.url),'utf8'),
+    fs.readFile(new URL('../styles.css',import.meta.url),'utf8')
+  ]);
+  assert.match(html,/listener-home/); assert.match(html,/For You/); assert.match(html,/Coming Soon/); assert.match(html,/People Like Me/); assert.match(html,/Music Moments/);
+  assert.match(js,/listenerTabs/); assert.match(js,/activateListenerTab/);
+  assert.match(css,/\\.listener-home/); assert.match(css,/\\.listener-tab/);
+});
