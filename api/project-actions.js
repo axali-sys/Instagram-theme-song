@@ -12,6 +12,32 @@ export default async function handler(req,res){
     const userId=await readSession(req);
     if(!userId) return res.status(401).json({error:'Authentication required'});
 
+    if(action==='follow' || action==='like'){
+      if(req.method==='GET'){
+        if(action==='follow'){
+          const rows=await sql`SELECT 1 FROM project_followers WHERE project_id=${id} AND user_id=${userId}`;
+          return res.status(200).json({following:Boolean(rows.length)});
+        }
+        const rows=await sql`SELECT 1 FROM project_likes WHERE project_id=${id} AND user_id=${userId}`;
+        return res.status(200).json({liked:Boolean(rows.length)});
+      }
+      if(req.method!=='POST' && req.method!=='DELETE') return res.status(405).json({error:'Method not allowed'});
+      const project=await sql`SELECT creator_id,title FROM music_projects WHERE id=${id}`;
+      if(!project.length)return res.status(404).json({error:'Project not found'});
+      const enabled=req.method==='POST';
+      if(action==='follow'){
+        if(enabled){
+          await sql`INSERT INTO project_followers(project_id,user_id) VALUES(${id},${userId}) ON CONFLICT(project_id,user_id) DO NOTHING`;
+          if(project[0].creator_id!==userId) await sql`INSERT INTO notifications(user_id,type,title,body,project_id) VALUES(${project[0].creator_id},'social','New project follower',${'A listener followed '+project[0].title},${id})`;
+        }else await sql`DELETE FROM project_followers WHERE project_id=${id} AND user_id=${userId}`;
+        return res.status(200).json({following:enabled});
+      }
+      if(enabled){
+        await sql`INSERT INTO project_likes(project_id,user_id) VALUES(${id},${userId}) ON CONFLICT(project_id,user_id) DO NOTHING`;
+      }else await sql`DELETE FROM project_likes WHERE project_id=${id} AND user_id=${userId}`;
+      return res.status(200).json({liked:enabled});
+    }
+
     if(action==='evaluate'){
       if(req.method!=='POST') return res.status(405).json({error:'Method not allowed'});
       const b=req.body||{};
