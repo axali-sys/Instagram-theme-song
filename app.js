@@ -208,3 +208,11 @@ document.querySelector('#createProjectBtn')?.addEventListener('click',async()=>{
     document.querySelector('#creatorProjectDescription').value='';
   }catch(error){msg.textContent=error.message;}
 });
+
+
+// Listener-first V1 home experience.
+const listenerTabs=[...document.querySelectorAll('.listener-tab')];
+const listenerViews=[...document.querySelectorAll('.listener-view')];
+function activateListenerTab(name){listenerTabs.forEach(tab=>tab.classList.toggle('active',tab.dataset.listenerTab===name));listenerViews.forEach(view=>view.classList.toggle('active',view.dataset.listenerView===name));}
+listenerTabs.forEach(tab=>tab.addEventListener('click',()=>activateListenerTab(tab.dataset.listenerTab)));
+document.querySelectorAll('[data-feed-action]').forEach(button=>button.addEventListener('click',()=>{const action=button.dataset.feedAction;if(action==='discover'||action==='people')document.querySelector('#discover')?.scrollIntoView({behavior:'smooth'});else if(action==='moment')document.querySelector('#momentBtn')?.click();else{const key=action.replace('open-','');document.querySelector('.open-project[data-target="'+key+'"]')?.click();}}));
