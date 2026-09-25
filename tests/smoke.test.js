@@ -45,5 +45,5 @@ test('listener-first V1 home experience is present', async ()=>{
   ]);
   assert.match(html,/listener-home/); assert.match(html,/For You/); assert.match(html,/Coming Soon/); assert.match(html,/People Like Me/); assert.match(html,/Music Moments/);
   assert.match(js,/listenerTabs/); assert.match(js,/activateListenerTab/);
-  assert.match(css,/\\.listener-home/); assert.match(css,/\\.listener-tab/);
+  assert.match(css,/\.listener-home/); assert.match(css,/\.listener-tab/);
 });
