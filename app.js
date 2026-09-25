@@ -20,6 +20,18 @@ async function api(path, options={}){
   return data;
 }
 
+async function loadListenerLibrary(){
+  const calls=[['/api/favorites','#favoritesList'],['/api/listening','#listeningList'],['/api/playlists','#playlistList']];
+  for(const [path,selector] of calls){
+    try{
+      const r=await api(path); const el=document.querySelector(selector); if(!el)continue;
+      if(path.endsWith('favorites')) el.innerHTML=(r.data||[]).map(x=>'<div class="song-row"><div class="song-art">♪</div><div><strong>'+x.title+'</strong><span>'+((x.artist||'').replace(/</g,'&lt;'))+'</span></div></div>').join('')||'<p class="saved">No favorites yet.</p>';
+      if(path.endsWith('listening')) el.innerHTML=(r.data||[]).slice(0,8).map(x=>'<div class="activity"><span class="activity-dot"></span><div><strong>'+x.title+'</strong><span>'+((x.artist||'').replace(/</g,'&lt;'))+'</span></div><time>'+new Date(x.played_at).toLocaleDateString()+'</time></div>').join('')||'<p class="saved">No listening activity yet.</p>';
+      if(path.endsWith('playlists')) el.innerHTML=(r.data||[]).map(x=>'<div class="playlist">'+x.name+'<br><span>'+x.item_count+' songs</span></div>').join('')||'<p class="saved">No playlists yet.</p>';
+    }catch{}
+  }
+}
+
 async function loadListenerHome(){
   try{
     const r=await api('/api/discovery'); const d=r.data||{};
@@ -186,6 +198,7 @@ if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;
 
 loadLiveV1();
 loadListenerHome();
+loadListenerLibrary();
 
 
 async function refreshAccount(){
