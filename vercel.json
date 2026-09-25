@@ -6,7 +6,7 @@
   ],
   "functions": {
     "api/**/*.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs24.x"
     }
   },
   "rewrites": [
