@@ -20,6 +20,24 @@ async function api(path, options={}){
   return data;
 }
 
+async function loadListenerHome(){
+  try{
+    const r=await api('/api/discovery'); const d=r.data||{};
+    const forYou=document.querySelector('#forYouFeed');
+    if(forYou){
+      forYou.innerHTML=(d.forYou||[]).slice(0,6).map(p=>'<article class="listener-feature-card"><span class="feed-kicker">'+p.type.toUpperCase()+'</span><h3>'+p.title+'</h3><p>@'+p.artist+' · '+p.status.replace('_',' ')+' · '+p.progress+'% creator-reported progress</p><button class="feed-action home-project" data-project-id="'+p.id+'">View project →</button></article>').join('')||'<article class="listener-feature-card"><h3>No projects yet</h3><p>Projects will appear here when they are available.</p></article>';
+      forYou.querySelectorAll('.home-project').forEach(b=>b.addEventListener('click',()=>{saved.textContent='Open the project tracker below to follow this project.';document.querySelector('#projects')?.scrollIntoView({behavior:'smooth'});}));
+    }
+    const coming=document.querySelector('#comingSoonList');
+    if(coming) coming.innerHTML=(d.comingSoon||[]).map(p=>'<article><div><strong>'+p.title+'</strong><span>@'+p.artist+' · '+(p.expected_release?new Date(p.expected_release).toLocaleDateString():'release date not set')+'</span></div><button class="feed-action" data-project-id="'+p.id+'">Track</button></article>').join('')||'<p class="listener-view-note">No followed or expected projects yet.</p>';
+    const people=document.querySelector('#peopleLikeMeList');
+    if(people) people.innerHTML=(d.peopleLikeMe||[]).map(p=>'<span>♪ @'+p.username+'</span>').join('')||'<span>No matching listeners yet.</span>';
+    const summary=document.querySelector('#momentSummary');
+    if(summary) summary.textContent=(d.moments||[]).length+' private Music Moment'+((d.moments||[]).length===1?'':'s')+' saved.';
+  }catch(error){}
+}
+document.querySelector('#homeMomentBtn')?.addEventListener('click',()=>document.querySelector('#momentBtn')?.click());
+
 async function loadLiveV1(){
   try{
     const [health,profile]=await Promise.all([api('/api/health'),api('/api/profile')]);
@@ -167,6 +185,7 @@ const stored=localStorage.getItem('musicProfileV1');
 if(stored){try{const s=JSON.parse(stored);handle.value=s.username||handle.value;track.value=s.themeSong||track.value;genre.value=s.primarySound||s.genre||genre.value;sync()}catch{}}
 
 loadLiveV1();
+loadListenerHome();
 
 
 async function refreshAccount(){
