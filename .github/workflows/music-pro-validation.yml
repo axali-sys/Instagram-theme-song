@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - music-pro-vercel-complete
+      - music-pro-v1-complete
   pull_request:
     branches:
       - main
