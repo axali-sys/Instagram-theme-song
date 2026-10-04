@@ -7,6 +7,7 @@
     "node": "24.x"
   },
   "scripts": {
+    "build": "node -e \"console.log('Music Pro static build complete')\"",
     "test": "node --test",
     "android:sync": "npx cap sync android",
     "android:open": "npx cap open android"
