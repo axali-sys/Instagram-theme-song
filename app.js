@@ -216,3 +216,9 @@ const listenerViews=[...document.querySelectorAll('.listener-view')];
 function activateListenerTab(name){listenerTabs.forEach(tab=>tab.classList.toggle('active',tab.dataset.listenerTab===name));listenerViews.forEach(view=>view.classList.toggle('active',view.dataset.listenerView===name));}
 listenerTabs.forEach(tab=>tab.addEventListener('click',()=>activateListenerTab(tab.dataset.listenerTab)));
 document.querySelectorAll('[data-feed-action]').forEach(button=>button.addEventListener('click',()=>{const action=button.dataset.feedAction;if(action==='discover'||action==='people')document.querySelector('#discover')?.scrollIntoView({behavior:'smooth'});else if(action==='moment')document.querySelector('#momentBtn')?.click();else{const key=action.replace('open-','');document.querySelector('.open-project[data-target="'+key+'"]')?.click();}}));
+
+// Music Intelligence layer — keeps insight in the existing V1 experience.
+const insightTabs=[...document.querySelectorAll('.insight-tab')];
+const insightPanels=[...document.querySelectorAll('.insight-panel')];
+insightTabs.forEach(tab=>tab.addEventListener('click',()=>{const name=tab.dataset.insightTab;insightTabs.forEach(x=>x.classList.toggle('active',x===tab));insightPanels.forEach(x=>x.classList.toggle('active',x.dataset.insightPanel===name));}));
+document.querySelector('#insightPlay')?.addEventListener('click',e=>{e.currentTarget.textContent=e.currentTarget.textContent==='▶'?'Ⅱ':'▶';});
