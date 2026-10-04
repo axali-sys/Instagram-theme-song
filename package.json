@@ -12,10 +12,11 @@
     "android:open": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@neondatabase/serverless": "^1.0.1",
-    "jose": "^6.0.12",
-    "@capacitor/android": "^7.4.3"
+    "@vercel/speed-insights": "^2.0.0",
+    "jose": "^6.0.12"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.4.3"

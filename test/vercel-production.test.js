@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 test('Vercel production configuration is present', async () => {
   const vercel = JSON.parse(await readFile('vercel.json', 'utf8'));
   assert.equal(vercel.version, 2);
-  assert.equal(vercel.functions['api/**/*.js'].runtime, 'nodejs20.x');
+  assert.equal(vercel.functions['api/**/*.js'].runtime, 'nodejs24.x');
   assert.ok(Array.isArray(vercel.rewrites));
   assert.ok(Array.isArray(vercel.headers));
 });
