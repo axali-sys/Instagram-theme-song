@@ -1,3 +1,8 @@
+import { injectSpeedInsights } from '@vercel/speed-insights';
+
+// Initialize Vercel Speed Insights
+injectSpeedInsights();
+
 const handle=document.querySelector('#handle');
 const track=document.querySelector('#track');
 const genre=document.querySelector('#genre');
